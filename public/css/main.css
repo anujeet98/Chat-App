@@ -50,7 +50,8 @@ body {
     outline: none;
 }
 
-#submit{
+#submit,
+.submitBtn{
     background-color: rgb(6, 109, 254);
     color: white;
     width: 100%;
@@ -59,7 +60,8 @@ body {
     border-radius: 8px;
     padding: 4%;
 }
-#submit:hover{
+#submit:hover,
+.submitBtn:hover{
     background-color: rgb(9, 54, 117);
 }
 

@@ -2,9 +2,14 @@ const username = document.getElementById("username");
 const email = document.getElementById("email");
 const phone = document.getElementById("phone");
 const password = document.getElementById("password");
-const submit =  document.getElementById("submit");
+const emailPhone = document.getElementById("email_phone");
+const signupBtn =  document.getElementById("signup");
+const signinBtn = document.getElementById("signin");
 
-submit.addEventListener("click", signup);
+if(signupBtn)
+    signupBtn.addEventListener("click", signup);
+if(signinBtn)
+    signinBtn.addEventListener("click", signin);
 
 
 
@@ -23,6 +28,31 @@ async function signup(event){
         }
 
         const response = await axios.post("http://localhost:3000/user/signup", reqObj);
+        if(response.status === 201){
+            return alert(response.data.message);
+        }
+    }
+    catch(err){
+        alert(err.response.data.message);
+    }
+
+}
+
+
+
+async function signin(event){
+    try{
+        event.preventDefault();
+        if(emailPhone.value==='' || password.value===''){
+            return alert('Please enter all the fields');
+        }
+
+        const reqObj = {
+            email_phone: emailPhone.value,
+            password: password.value,
+        }
+
+        const response = await axios.post("http://localhost:3000/user/signin", reqObj);
         if(response.status === 201){
             return alert(response.data.message);
         }
