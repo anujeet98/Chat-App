@@ -24,7 +24,7 @@ body {
 }
 
 .authContainer-form {
-    background-color: rgb(255, 255, 255); /* Light greyish transparent background */
+    background-color: #ffffff; /* Light greyish transparent background */
     padding: 20px;
     border-radius: 30px;
     width: 350px;
@@ -60,7 +60,7 @@ body {
     padding: 4%;
 }
 #submit:hover{
-    background-color: rgb(2, 69, 163);
+    background-color: rgb(9, 54, 117);
 }
 
 #display-image-container{
@@ -68,7 +68,7 @@ body {
     width: 80px; /* Adjust the width and height as needed */
     height: 80px;
     margin: 40px auto;
-    border: 2px solid #ccc; /* Optional: Add a border to the container */
+    border: 4px solid #000000; /* Optional: Add a border to the container */
     border-radius: 50%; /* Ensure the container is a perfect circle */
     overflow: hidden;
     display: flex;
@@ -77,6 +77,18 @@ body {
     border: 1px solid black;
     border-radius: 50%;
 }
+
+
+#forgotpsswd{
+    width: 100%;
+}
+#forgotpsswd p{
+    display: flex;
+    float: right;
+    margin: 0;
+    font-size: small;
+}
+
 
 /* Responsive Styling */
 @media (max-width: 500px) {
