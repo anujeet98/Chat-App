@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 const express =  require('express');
 const bodyparser = require('body-parser');
@@ -8,6 +7,7 @@ const cors = require('cors');
 
 const userRoutes = require('./routes/user');
 
+//-----------------------------------------------------------------------------------------
 const app = express();
 
 app.use(cors({
@@ -15,11 +15,11 @@ app.use(cors({
 }));
 app.use(bodyparser.json());
 
-
+//------------------------------------------------------------------------------------------
 app.use('/user', userRoutes);
 
 
-
+//------------------------------------------------------------------------------------------
 const serverSync = async()=>{
     try{
         // await sequelize.sync({force: true});
