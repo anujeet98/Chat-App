@@ -5,6 +5,6 @@ const Router = express.Router();
 
 Router.post('/send', authMiddleware.authenticate, chatController.postChat);
 
-// Router.post('/signin', userController.signin);
+Router.get('/fetch', authMiddleware.authenticate, chatController.getChats);
 
 module.exports = Router;
