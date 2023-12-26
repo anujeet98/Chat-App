@@ -2,6 +2,22 @@
 const chatBody = document.getElementById("chat-body");
 const msgBox = document.getElementById("messageBox");
 const sendBtn = document.getElementById("sendBtn");
+const emojiBtn = document.getElementById("emojiBtn");
+
+
+let emojiPickerView = false; 
+emojiBtn.addEventListener('click', ()=>{
+    if(emojiPickerView){
+        emojiPickerView=false;
+        return document.body.removeChild(document.querySelector('emoji-picker'));
+    }
+    document.body.appendChild(document.createElement('emoji-picker'));
+    emojiPickerView = true;
+    const emojiPicker = document.querySelector('emoji-picker');
+    emojiPicker.addEventListener('emoji-click', event => msgBox.value+= event.detail.unicode);
+})
+
+    
 
 document.addEventListener('DOMContentLoaded', ()=>{
     pushJoinMessage("XYZ joined the chat");
@@ -50,7 +66,8 @@ async function sendMessage(){
         const message = msgBox.value;
         if(message!==null && message!==undefined && message!==""){
             const response = await axios.post('http://localhost:3000/chat/send', {message: message}, {headers: {"Authorization": localStorage.getItem("token")}});
-            console.log(response)
+            msgBox.value = '';
+            emojiBtn.click();
             pushMyMessage(`${response.data.username}: ${message}`);
         }
     }
