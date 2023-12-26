@@ -54,7 +54,9 @@ async function signin(event){
 
         const response = await axios.post("http://localhost:3000/user/signin", reqObj);
         if(response.status === 201){
-            return alert(response.data.message);
+            localStorage.setItem('token', response.data.token);
+            alert(response.data.message);
+            window.location.href = "../views/chat-window.html";
         }
     }
     catch(err){
