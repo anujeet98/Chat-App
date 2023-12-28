@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const ChatModel = require('../models/chat');
 const UserModel = require('../models/user');
 
@@ -16,14 +17,20 @@ module.exports.postChat = async(req, res, next)=>{
 
 module.exports.getChats = async(req, res, next)=>{
     try{
+        const lastMessageId = req.params.lastMessageId;
         const response = await ChatModel.findAll({
             include: [{
                 model: UserModel,
                 attributes: ['username']
             }],
-            attributes: ['id', 'createdAt', 'updatedAt', 'message']
+            attributes: ['id', 'createdAt', 'updatedAt', 'message'],
+            where: { 
+                id: {
+                    [Op.gt]: lastMessageId
+                }
+            }
         });
-        res.status(200).json({thisUser: req.user.username, response:response});
+        res.status(200).json({thisUser: req.user.username, messageInfo:response});
     }
     catch(err){
         console.error("getChatsError: ",err);
