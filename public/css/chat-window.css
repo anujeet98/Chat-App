@@ -1,139 +1,298 @@
-* {
-    margin: 0;
-    padding: 0;
-}
+    * {
+        margin: 0;
+        padding: 0;
+    }
 
-html, body {
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    top: 0;
-    display: flex;
-    justify-content: center;
-    /* border: 5px solid orange; */
-    background-color: rgba(77, 76, 76, 0.558);
-}
+    html, body {
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        /* border: 5px solid orange; */
+        background-color: rgba(77, 76, 76, 0.558);
+    }
 
-#main {
-    border: 1px solid rgb(0, 0, 0);
-    margin-top: 5vh;
-    height: 90vh;
-    width: 100%;
-}   
+    #main {
+        border: 1px solid rgb(0, 0, 0);
+        margin-top: 5vh;
+        height: 90vh;
+        width: 100%;
+        display: flex;
+    }   
 
+    #container1{
+        width: 35%;
+        height: inherit;
+    }
+    #groupContainer{
+        width: 100%;
+        height: inherit;
+    }
 
-#chat-header{
-    width: 100%;
-    height: 8%;
-    border: 1px solid rgb(0, 0, 0);
-    background-color: rgba(79, 120, 242, 0.537);
-}
-
-#chat-body{
-    width: 100%;
-    height: 84%;
-    border: 1px solid rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
-    overflow: scroll;
-}
-
-#chat-footer{
-    width: 100%;
-    height: 8%;
-    border: 1px solid rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#messageBox {
-    padding: 0 1rem;
-    height: 80%;
-    width: 70%;
-    outline: none;
-    border: none;
-    background-color: rgb(255, 255, 255);
-    box-sizing: border-box;
-    font-size: 25px;
-}
+    #chat{
+        width: 65%;
+        height: inherit;
+    }
 
 
- #emojiBtn, #attachmentBtn, #sendBtn {
-    width: 40px; /* Adjust the width percentage as needed */
-    height: 40px; /* Adjust the height percentage as needed */
-    max-width: 40px; /* Optionally set a max-width */
-    max-height: 40px; /* Optionally set a max-height */
-    border-radius: 50%;
-    background-color: rgba(221, 218, 218, 0.859);
-    border: 2px solid black;
-    cursor: pointer;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 1%;
-    padding: 0.2rem;
-}
+    #chat-header{
+        width: 100%;
+        height: 8%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgba(79, 120, 242, 0.537);
+    }
 
-#sendBtn{
-    background-color: orangered;
-}
-#sendBtn:hover{
-    background-color: rgb(224, 41, 0);
-}
-#emojiBtn:hover{
-    background-color: rgba(183, 183, 183, 0.859);
-}
+    #chat-body{
+        width: 100%;
+        height: 84%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgb(255, 255, 255);
+        overflow: scroll;
+    }
 
-#emojiBtn img,
-#attachmentBtn img,
-#sendBtn img{
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
-}
+    #chat-footer{
+        width: 100%;
+        height: 8%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgb(255, 255, 255);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-
-
-/* ------------------------------------------------------------------------ */
-
-.joinMsg{
-    text-align: center;
-    margin: 1% 35%;
-    width: 30%;
-    background-color: rgba(220, 220, 220, 0.738);
-    border: 1px solid black;
-    border-radius: 10px;
-}
-
-.myMsg{
-    text-align: center;
-    margin: 1% 3%;
-    float: right;
-
-    width: 45%;
-    background-color: rgba(15, 175, 98, 0.738);
-    border: 1px solid black;
-    border-radius: 10px;
-}
-
-.otherMsg{
-    text-align: center;
-    margin: 1% 3%;
-    float: left;
-
-    width: 45%;
-    background-color: rgba(15, 172, 175, 0.738);
-    border: 1px solid black;
-    border-radius: 10px;
-}
+    #messageBox {
+        padding: 0 1rem;
+        height: 80%;
+        width: 70%;
+        outline: none;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        box-sizing: border-box;
+        font-size: 25px;
+    }
 
 
-emoji-picker{
-    z-index: 9;
-    position: fixed;
-    top: 48vh;
-    height: 40%;
-    width: 100%;
-}
+    #emojiBtn, #attachmentBtn, #sendBtn {
+        width: 40px; /* Adjust the width percentage as needed */
+        height: 40px; /* Adjust the height percentage as needed */
+        max-width: 40px; /* Optionally set a max-width */
+        max-height: 40px; /* Optionally set a max-height */
+        border-radius: 50%;
+        background-color: rgba(221, 218, 218, 0.859);
+        border: 2px solid black;
+        cursor: pointer;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 1%;
+        padding: 0.2rem;
+    }
+
+    #sendBtn{
+        background-color: orangered;
+    }
+    #sendBtn:hover{
+        background-color: rgb(224, 41, 0);
+    }
+    #emojiBtn:hover{
+        background-color: rgba(183, 183, 183, 0.859);
+    }
+
+    #emojiBtn img,
+    #attachmentBtn img,
+    #sendBtn img{
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+    }
+
+
+
+    /* ------------------------------------------------------------------------ */
+
+    .joinMsg{
+        text-align: center;
+        margin: 1% 35%;
+        width: 30%;
+        background-color: rgba(220, 220, 220, 0.738);
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+    .myMsg{
+        text-align: center;
+        margin: 1% 3%;
+        float: right;
+
+        width: 45%;
+        background-color: rgba(15, 175, 98, 0.738);
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+    .otherMsg{
+        text-align: center;
+        margin: 1% 3%;
+        float: left;
+
+        width: 45%;
+        background-color: rgba(15, 172, 175, 0.738);
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+    /* ------------------------------------------------------------------------------------------------------- */
+
+
+
+    emoji-picker{
+        z-index: 9;
+        position: fixed;
+        top: 48vh;
+        height: 40%;
+        width: inherit;
+    }
+
+
+
+    /* --------------------------------------------------------------------------------------------------------- */
+
+    #groupContainer-header{
+        width: 100%;
+        height: 8%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgba(79, 120, 242, 0.537);
+        display: flex;
+    }
+
+    #groupContainer-body{
+        width: 100%;
+        height: 92%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgb(255, 255, 255);
+        overflow: scroll;
+        padding-top: 10%;
+    }
+
+
+    .groupBtn{
+        height: 12%;
+        width: 98%;
+        margin: 1% 1%;
+        background-color: aliceblue;
+    }
+
+    .groupBtn:hover{
+        background-color: rgb(159, 176, 246);
+    }
+
+    .group{    
+        border: 1px solid black;    
+        display: flex;
+        padding: 1% 1%;
+        height: 100%;
+        width: 100%;
+        display: flex;
+    }
+
+    .display-img{
+        margin: 1% 2%;
+        border-radius: 50%;
+        border: 2px solid black;
+    }
+
+    .group-name{
+        margin: 3% 2%;
+    }
+
+    #newChatBtn{
+        margin: 2%;
+        padding: 0.5%;
+        font-size: small;
+    }
+    #newChatBtn:hover{
+        background-color: rgb(192, 192, 192);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+
+    #createGroupContainer{
+        width: 100%;
+        height: inherit;
+    }
+
+    #createGroup-header{
+        width: 100%;
+        height: 14%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgba(26, 57, 150, 0.537);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #createGroup-body{
+        width: 100%;
+        height: 76%;
+        background-color: rgb(255, 255, 255);
+    }
+
+    #createGroup-body input,textarea,
+    #usersList-container{
+        width: 92%;
+        margin: 0% 4%;
+        margin-top: 3%;
+        border-radius: 6px;
+        padding: 2%;
+        border: 2px solid black;
+    }
+    #usersList-container,
+    #selectOptions{
+        height: 45%;
+        overflow: scroll;
+    }
+
+
+    #createGroup-footer{
+        width: 100%;
+        height: 10%;
+        background-color: rgb(255, 255, 255);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #createGroup-footer button{
+        padding: 1% 3%;
+        margin: 0% 1%;
+    }
+    #createGroup-footer button:hover{
+        background-color: rgba(159, 166, 159, 0.693);
+    }
+
+
+/* ---------------------------------------------------------------------------------------------------------------- */
+    #userlist-div{
+        border-bottom: 1px solid black;
+        padding: 4%;
+    }
+    #userlist-div label{
+        display: flex;
+        justify-content: space-between;
+
+    }
+    #userlist-div label input{
+        margin: 0%;
+        height: 25px;
+        width: 25px;
+    }
+
+
+
+    .hidden {
+        display: none;
+    }

@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, literal } = require('sequelize');
 const bcrypt = require('bcrypt');
 const Cryptr = require('cryptr');
 
@@ -50,7 +50,8 @@ module.exports.signin = async(req,res,next) => {
             if(passwordMatch){
                 const cryptr = new Cryptr(process.env.CRYPT_SECRET);
                 const encryptedId = cryptr.encrypt(existingUser.id);
-                const jwtToken = tokenGenereator({userId: encryptedId});
+                const encryptedUserEmail = cryptr.encrypt(existingUser.email)
+                const jwtToken = tokenGenereator({userId: encryptedId, userEmail: encryptedUserEmail});
                 return res.status(201).json({token: jwtToken, message: "User login successful"});
             }
             else
@@ -61,5 +62,34 @@ module.exports.signin = async(req,res,next) => {
     catch(err){
         console.log('SignUp-Error: ',err);
         res.status(500).json({error: err, message: "something went wrong"})
+    }
+}
+
+
+
+
+
+module.exports.getUsers = async(req, res, next) => {
+    try{
+        const allUsers = await User.findAll({attributes: ['id', 'username']});
+        res.status(200).json(allUsers);
+    }
+    catch(err){
+        console.log('getUsers-Error: ',err);
+        res.status(500).json({error: err, message: "something went wrong"});
+    }
+}
+
+
+
+module.exports.fetchGroups = async(req, res, next) => {
+    try{
+        const user = req.user;
+        const groups = await user.getGroups();
+        res.status(200).json({groups: groups, message:"success"});
+    }
+    catch(err){
+        console.log('fetchGroups-Error: ',err);
+        res.status(500).json({error: err, message: "something went wrong"});
     }
 }

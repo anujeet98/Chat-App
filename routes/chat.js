@@ -5,6 +5,8 @@ const Router = express.Router();
 
 Router.post('/send', authMiddleware.authenticate, chatController.postChat);
 
-Router.get('/fetch/lastMessageId=:lastMessageId', authMiddleware.authenticate, chatController.getChats);
+Router.get('/fetch', authMiddleware.authenticate, chatController.getChats);
+
+Router.post('/create-group/', authMiddleware.authenticate, chatController.createGroup);
 
 module.exports = Router;

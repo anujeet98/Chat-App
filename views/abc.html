@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Window</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden; /* Hide horizontal scrollbar */
+    }
+
+    .groups {
+      flex: 1;
+      background-color: #f2f2f2;
+      overflow-y: auto;
+      border-right: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .chat {
+      flex: 2;
+      box-sizing: border-box;
+      display: none;
+    }
+
+    .back-button {
+      display: none;
+      padding: 15px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .groups {
+        display: block;
+        border-right: none; /* Remove border on mobile */
+      }
+
+      .chat {
+        display: block;
+      }
+
+      .back-button {
+        display: block;
+      }
+
+      .group-item {
+        padding: 15px;
+        cursor: pointer;
+        box-sizing: border-box;
+      }
+
+      .group-item:hover {
+        background-color: #ddd;
+      }
+    }
+
+    .group-item {
+      border-bottom: 1px solid #ccc;
+    }
+
+    .message-container {
+      padding: 20px;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .message {
+      background-color: #f9f9f9;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="groups" id="groups">
+    <div class="group-item" onclick="showChat('group1')">Group 1</div>
+    <div class="group-item" onclick="showChat('group2')">Group 2</div>
+    <!-- Add more group items as needed -->
+  </div>
+  
+  <div class="chat" id="chat">
+    <button class="back-button" onclick="showGroups()">Back</button>
+    <div class="message-container" id="group1">
+      <!-- Messages for Group 1 -->
+      <div class="message">Hello, how are you?</div>
+      <!-- Add more messages as needed -->
+    </div>
+
+    <div class="message-container" id="group2">
+      <!-- Messages for Group 2 -->
+      <div class="message">Hi there!</div>
+      <!-- Add more messages as needed -->
+    </div>
+    <!-- Add more chat containers as needed -->
+  </div>
+</div>
+
+<script>
+  function showChat(group) {
+    // Hide the groups section on mobile
+    const groupsSection = document.getElementById('groups');
+    if (groupsSection && window.innerWidth <= 768) {
+      groupsSection.style.display = 'none';
+    }
+
+    // Show the selected chat container
+    const selectedChat = document.getElementById('chat');
+    if (selectedChat) {
+      selectedChat.style.display = 'flex';
+    }
+
+    // Show the back button on mobile
+    const backButton = document.querySelector('.back-button');
+    if (backButton && window.innerWidth <= 768) {
+      backButton.style.display = 'block';
+    }
+  }
+
+  function showGroups() {
+    // Show the groups section on mobile
+    const groupsSection = document.getElementById('groups');
+    if (groupsSection && window.innerWidth <= 768) {
+      groupsSection.style.display = 'block';
+    }
+
+    // Hide the chat container
+    const selectedChat = document.getElementById('chat');
+    if (selectedChat) {
+      selectedChat.style.display = 'none';
+    }
+
+    // Hide the back button on mobile
+    const backButton = document.querySelector('.back-button');
+    if (backButton && window.innerWidth <= 768) {
+      backButton.style.display = 'none';
+    }
+  }
+</script>
+
+</body>
+</html>

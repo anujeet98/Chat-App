@@ -8,8 +8,10 @@ const cors = require('cors');
 const userRoutes = require('./routes/user');
 const chatRoutes = require('./routes/chat');
 
-const userModel = require('./models/user');
-const chatModel = require('./models/chat');
+const User = require('./models/user');
+const Chat = require('./models/chat');
+const Group = require('./models/group');
+const UserGroup = require('./models/user-group');
 
 //-----------------------------------------------------------------------------------------
 const app = express();
@@ -25,8 +27,16 @@ app.use('/chat', chatRoutes);
 
 
 //------------------------------------------------------------------------------------------
-userModel.hasMany(chatModel);
-chatModel.belongsTo(userModel);
+User.hasMany(Chat);
+Chat.belongsTo(User);
+
+Group.hasMany(Chat);
+Chat.belongsTo(Group);
+
+User.belongsToMany(Group, {through: UserGroup});
+Group.belongsToMany(User, {through: UserGroup});
+
+
 
 
 //-----------------------------------------------------------------------------------------

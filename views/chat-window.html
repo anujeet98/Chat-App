@@ -12,13 +12,39 @@
 </head>
 <body>
     <div id="main">
-        <div id="chat-header"></div>
-        <div id="chat-body"></div>
-        <div id="chat-footer">
-            <button id="emojiBtn"><img src="../public/image/emojiBtn.png" alt="emj"></button>
-            <input type="text" id="messageBox" placeholder="Your message here...."></input>
-            <div id="attachmentBtn"><img src="../public/image/attachmentBtn.png" alt="atch"></div>
-            <button id="sendBtn"><img src="../public/image/senBtn.png" alt="snd"></button>
+        <div id="container1">
+            <div id="groupContainer">
+                <div id="groupContainer-header">
+                    <img src="../public/image/user.JPG" alt="display.JPG" class="display-img"/>
+                    <button id="newChatBtn">New Chat/Group</button>
+                </div>
+                <div id="groupContainer-body"></div>
+            </div>
+            <div id="createGroupContainer" class="hidden">
+                <div id="createGroup-header">
+                    <h2 id="createGroup-header-heading">Create new group</h2>
+                </div>
+                <div id="createGroup-body">
+                    <input type="text" id="groupName" placeholder="Group Name" required><br>
+                    <textarea id="groupDescription" placeholder="Group Description"></textarea><br>
+                    <input type="text" id="group-userSearch" placeholder="search.."><br>
+                    <div id="usersList-container"></div>
+                </div>
+                <div id="createGroup-footer">
+                    <button class="button" id="cancelGrpBtn">cancel</button>
+                    <button class="button" id="createGrpBtn">create</button>
+                </div>
+            </div>
+        </div>
+        <div id="chat">
+            <div id="chat-header"></div>
+            <div id="chat-body"></div>
+            <div id="chat-footer">
+                <button id="emojiBtn"><img src="../public/image/emojiBtn.png" alt="emj"></button>
+                <input type="text" id="messageBox" placeholder="Your message here...."></input>
+                <div id="attachmentBtn"><img src="../public/image/attachmentBtn.png" alt="atch"></div>
+                <button id="sendBtn"><img src="../public/image/senBtn.png" alt="snd"></button>
+            </div>
         </div>
     </div>
 
