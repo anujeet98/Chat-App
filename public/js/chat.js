@@ -4,6 +4,7 @@ const emojiBtn = document.getElementById("emojiBtn");
 const userList = document.getElementById("usersList-container");
 
 let selectedGroup = -1;
+let selectedGroupBtn = null;
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -131,9 +132,14 @@ function populateSearchList(users){
 function renderNewGroup(groupName, groupId){
     const grpbtn = document.createElement('button');
     grpbtn.className = 'groupBtn';
-    grpbtn.onclick = ()=>{
+    grpbtn.onclick = (e)=>{
         selectedGroup = groupId;
         loadMessages(selectedGroup);
+
+        if(selectedGroupBtn!=null)
+            selectedGroupBtn.classList.toggle("selected");
+        e.target.classList.toggle("selected");
+        selectedGroupBtn = e.target;
     }
     grpbtn.innerHTML = `
         <div class="group">

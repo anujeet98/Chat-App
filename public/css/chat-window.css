@@ -296,3 +296,7 @@
     .hidden {
         display: none;
     }
+
+    .selected{
+        background-color: rgb(112, 141, 221);
+    }
