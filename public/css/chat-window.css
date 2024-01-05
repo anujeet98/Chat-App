@@ -1,139 +1,366 @@
-* {
-    margin: 0;
-    padding: 0;
-}
+    * {
+        margin: 0;
+        padding: 0;
+    }
 
-html, body {
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    top: 0;
-    display: flex;
-    justify-content: center;
-    /* border: 5px solid orange; */
-    background-color: rgba(77, 76, 76, 0.558);
-}
+    html, body {
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        background-color: rgba(77, 76, 76, 0.558);
+    }
 
-#main {
-    border: 1px solid rgb(0, 0, 0);
-    margin-top: 5vh;
-    height: 90vh;
-    width: 100%;
-}   
+    #main {
+        border: 1px solid rgb(0, 0, 0);
+        margin-top: 5vh;
+        height: 90vh;
+        width: 100%;
+        display: flex;
+    }   
 
+    #container1{
+        width: 35%;
+        height: inherit;
+        border: 1px solid black;
+    }
+    #container2{
+        width: 65%;
+        height: inherit;
+        border: 1px solid black;
+    }
 
-#chat-header{
-    width: 100%;
-    height: 8%;
-    border: 1px solid rgb(0, 0, 0);
-    background-color: rgba(79, 120, 242, 0.537);
-}
+    .container1-content{
+        width: 100%;
+        height: inherit;
+    }
 
-#chat-body{
-    width: 100%;
-    height: 84%;
-    border: 1px solid rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
-    overflow: scroll;
-}
-
-#chat-footer{
-    width: 100%;
-    height: 8%;
-    border: 1px solid rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#messageBox {
-    padding: 0 1rem;
-    height: 80%;
-    width: 70%;
-    outline: none;
-    border: none;
-    background-color: rgb(255, 255, 255);
-    box-sizing: border-box;
-    font-size: 25px;
-}
-
-
- #emojiBtn, #attachmentBtn, #sendBtn {
-    width: 40px; /* Adjust the width percentage as needed */
-    height: 40px; /* Adjust the height percentage as needed */
-    max-width: 40px; /* Optionally set a max-width */
-    max-height: 40px; /* Optionally set a max-height */
-    border-radius: 50%;
-    background-color: rgba(221, 218, 218, 0.859);
-    border: 2px solid black;
-    cursor: pointer;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 1%;
-    padding: 0.2rem;
-}
-
-#sendBtn{
-    background-color: orangered;
-}
-#sendBtn:hover{
-    background-color: rgb(224, 41, 0);
-}
-#emojiBtn:hover{
-    background-color: rgba(183, 183, 183, 0.859);
-}
-
-#emojiBtn img,
-#attachmentBtn img,
-#sendBtn img{
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
-}
+    #container2-chat{
+        width: 100%;
+        height: inherit;
+    }
+    #container2-default{
+        width: 100%;
+        height: inherit;
+        background-image: url("../image/chat-default.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    /* --------------------------------------------------------------------------------------------------- */
 
 
 
-/* ------------------------------------------------------------------------ */
-
-.joinMsg{
-    text-align: center;
-    margin: 1% 35%;
-    width: 30%;
-    background-color: rgba(220, 220, 220, 0.738);
-    border: 1px solid black;
-    border-radius: 10px;
-}
-
-.myMsg{
-    text-align: center;
-    margin: 1% 3%;
-    float: right;
-
-    width: 45%;
-    background-color: rgba(15, 175, 98, 0.738);
-    border: 1px solid black;
-    border-radius: 10px;
-}
-
-.otherMsg{
-    text-align: center;
-    margin: 1% 3%;
-    float: left;
-
-    width: 45%;
-    background-color: rgba(15, 172, 175, 0.738);
-    border: 1px solid black;
-    border-radius: 10px;
-}
 
 
-emoji-picker{
-    z-index: 9;
-    position: fixed;
-    top: 48vh;
-    height: 40%;
-    width: 100%;
-}
+    #chat-header{
+        width: 100%;
+        height: 8%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgba(79, 120, 242, 0.537);
+        padding: 1%;
+    }
+
+    #chat-body{
+        width: 100%;
+        height: 84%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgb(255, 255, 255);
+        overflow: scroll;
+    }
+
+    #chat-footer{
+        width: 100%;
+        height: 8%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgb(255, 255, 255);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #messageBox {
+        padding: 0 1rem;
+        height: 80%;
+        width: 70%;
+        outline: none;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        box-sizing: border-box;
+        font-size: 25px;
+    }
+
+
+    #emojiBtn, #attachmentBtn, #sendBtn {
+        width: 40px; /* Adjust the width percentage as needed */
+        height: 40px; /* Adjust the height percentage as needed */
+        max-width: 40px; /* Optionally set a max-width */
+        max-height: 40px; /* Optionally set a max-height */
+        border-radius: 50%;
+        background-color: rgba(221, 218, 218, 0.859);
+        border: 2px solid black;
+        cursor: pointer;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 1%;
+        padding: 0.2rem;
+    }
+
+    #sendBtn{
+        background-color: orangered;
+    }
+    #sendBtn:hover{
+        background-color: rgb(224, 41, 0);
+    }
+    #emojiBtn:hover{
+        background-color: rgba(183, 183, 183, 0.859);
+    }
+
+    #emojiBtn img,
+    #attachmentBtn img,
+    #sendBtn img{
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+    }
+
+
+
+    /* ------------------------------------------------------------------------ */
+
+    .joinMsg{
+        text-align: center;
+        margin: 1% 35%;
+        width: 30%;
+        background-color: rgba(220, 220, 220, 0.738);
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+    .myMsg{
+        text-align: center;
+        margin: 1% 3%;
+        float: right;
+
+        width: 45%;
+        background-color: rgba(15, 175, 98, 0.738);
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+    .otherMsg{
+        text-align: center;
+        margin: 1% 3%;
+        float: left;
+
+        width: 45%;
+        background-color: rgba(15, 172, 175, 0.738);
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+    /* ------------------------------------------------------------------------------------------------------- */
+
+
+
+    emoji-picker{
+        z-index: 9;
+        position: fixed;
+        top: 48vh;
+        height: 40%;
+        width: inherit;
+    }
+
+
+
+    /* --------------------------------------------------------------------------------------------------------- */
+
+    #groupContainer-header{
+        width: 100%;
+        height: 8%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgba(79, 120, 242, 0.537);
+        display: flex;
+    }
+
+    #groupContainer-body{
+        width: 100%;
+        height: 92%;
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgb(255, 255, 255);
+        overflow: scroll;
+        padding-top: 10%;
+    }
+
+
+    .groupBtn{
+        height: 12%;
+        width: 98%;
+        margin: 1% 1%;
+        background-color: aliceblue;
+    }
+
+    .groupBtn:hover{
+        background-color: rgb(159, 176, 246);
+    }
+
+    .group{    
+        border: 1px solid black;    
+        display: flex;
+        padding: 1% 1%;
+        height: 100%;
+        width: 100%;
+        display: flex;
+    }
+
+    .display-img{
+        margin: 1% 2%;
+        border-radius: 50%;
+        border: 2px solid black;
+    }
+
+    .group-name{
+        display: flex;
+        align-items: center;
+        font-family: sans-serif;
+        font-weight: bold;
+    }
+
+    #newChatBtn{
+        margin: 2%;
+        padding: 0.5%;
+        font-size: small;
+        
+    }
+    #newChatBtn:hover{
+        background-color: rgb(192, 192, 192);
+    }
+
+    #profileNameDiv{
+        color: white;
+        font-size: large;
+        font-family: sans-serif;
+        font-weight: bolder;
+        display: flex;
+        align-items: center;
+        flex: 5;
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+
+    /* rgba(26, 57, 150, 0.537); */
+
+    .container1-body{
+        width: 100%;
+        height: 100%;
+        background-color: rgb(255, 255, 255);
+        padding: 5% 2%;
+        overflow-y: scroll;
+    }
+
+    .container1-body input,textarea,
+    .userList-container{
+        width: 100%;
+        margin-top: 3%;
+        border-radius: 6px;
+        padding: 2%;
+        border: 2px solid black;
+    }
+    .container1-body>label{
+        font-weight: bolder;
+        padding: 0% 2%;
+    }
+
+    .container1-body>button{
+        margin: 0% 0%;
+        margin-top: 3%;
+        /* float: right; */
+        width: 40%; 
+        padding: 1%;
+    }
+    .AdminBtn{
+        float: right;
+    }
+    .container1-body>button:hover{
+        background-color: rgba(159, 166, 159, 0.693);
+    }
+
+    .userList-container{
+        height: 45%;
+        overflow-y: scroll;
+    }
+
+    /* ----------------------------------------------------------------------------------------------------------------- */
+
+    .userlist-div{
+        border-bottom: 1px solid black;
+        padding: 4%;
+        display: flex;
+    }
+    .userlist-div label{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        font-weight: bold;
+        font-size: large;
+    }
+    .userlist-div>label>input{
+        margin: 0%;
+        height: 25px;
+        width: 25px;
+        float: right;
+    }
+
+    #userList-username{
+        flex: 3;
+    }
+    #userList-admintag{
+        flex: 1;
+        color: brown;
+        font-weight: bold;
+    }
+    #userList-adminBtn{
+        flex:3;
+    }
+    #userList-adminBtn>button{
+        margin: 0% 2%;
+        /* padding: 1% 2%; */
+        width: 40%;
+        text-size-adjust: inherit;
+    }
+
+
+
+
+    /* ---------------------------------------------------------------------------------------------------------- */
+
+    #editGroupBtn{
+        height: 100%;
+        width: 50%;
+        background: none;
+        border: none;
+        padding-left: 5%;
+        text-align: left;
+        color: white;
+        font-family: sans-serif;
+        font-weight: bolder;
+        font-size: larger;
+    }
+
+
+
+    .hidden {
+        display: none;
+    }
+
+    .selected{
+        background-color: rgb(112, 141, 221);
+    }
+
+    .adminBtns{
+        float: right;
+    }

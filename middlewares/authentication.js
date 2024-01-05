@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Cryptr = require('cryptr');
 const User = require('../models/user');
+const { where } = require('sequelize');
 
 module.exports.authenticate = async(req, res, next) => {
     try{
@@ -8,7 +9,8 @@ module.exports.authenticate = async(req, res, next) => {
         const verifiedToken = jwt.verify(token, process.env.TOKEN_SECRET);
         const cryptr = new Cryptr(process.env.CRYPT_SECRET);
         const userId = cryptr.decrypt(verifiedToken.userId);
-        const verifiedUser = await User.findByPk(userId);
+        const userEmail = cryptr.decrypt(verifiedToken.userEmail);
+        const verifiedUser = await User.findOne({where: {id: userId, email: userEmail}});
 
         if(verifiedUser){
             req.user = verifiedUser;
