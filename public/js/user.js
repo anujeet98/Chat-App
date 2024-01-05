@@ -27,7 +27,7 @@ async function signup(event){
             phone: phone.value
         }
 
-        const response = await axios.post("http://localhost:3000/user/signup", reqObj);
+        const response = await axios.post("http://localhost:4000/user/signup", reqObj);
         if(response.status === 201){
             alert(response.data.message);
             window.location.href = "../views/sign-in.html";
@@ -53,7 +53,7 @@ async function signin(event){
             password: password.value,
         }
 
-        const response = await axios.post("http://localhost:3000/user/signin", reqObj);
+        const response = await axios.post("http://localhost:4000/user/signin", reqObj);
         if(response.status === 201){
             localStorage.removeItem('savedmessages');
             localStorage.setItem('token', response.data.token);
