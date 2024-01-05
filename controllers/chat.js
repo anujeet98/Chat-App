@@ -1,4 +1,4 @@
-const { Op, literal } = require('sequelize');
+const { Op} = require('sequelize');
 
 const ChatModel = require('../models/chat');
 const UserModel = require('../models/user');
@@ -61,35 +61,6 @@ module.exports.getChats = async(req, res, next)=>{
     }
     catch(err){
         console.error("getChats-Error: ",err);
-        return res.status(500).json({error: err, message:"something went wrong"});
-    }
-}
-
-
-module.exports.createGroup = async(req,res,next) => {
-    try{
-        const{ groupName, groupDescription, members } = req.body;
-        const user = req.user;
-        if(inputValidator.text(groupName) || members.length===0){
-            return res.status(400).json({error:"invalid input parameters", message:"invalid input, kindly provide group name and select members"});
-        }
-
-        const [newGroup, users] = await Promise.all([
-            GroupModel.create({groupName: groupName, groupDescription: groupDescription, createdBy: user.id}),
-            UserModel.findAll({
-                where: {
-                    id: {
-                        [Op.in]: members
-                    }
-                }
-            })
-        ]);
-
-        const response= await newGroup.addUsers(users);
-        res.status(200).json({groupCreated: newGroup, userGroup: response});
-    }
-    catch(err){
-        console.error("createGroup-Error: ",err);
         return res.status(500).json({error: err, message:"something went wrong"});
     }
 }

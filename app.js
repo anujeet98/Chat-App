@@ -7,6 +7,7 @@ const cors = require('cors');
 
 const userRoutes = require('./routes/user');
 const chatRoutes = require('./routes/chat');
+const groupRoutes = require('./routes/group');
 
 const User = require('./models/user');
 const Chat = require('./models/chat');
@@ -24,6 +25,7 @@ app.use(bodyparser.json());
 //------------------------------------------------------------------------------------------
 app.use('/user', userRoutes);
 app.use('/chat', chatRoutes);
+app.use('/group', groupRoutes);
 
 
 //------------------------------------------------------------------------------------------
@@ -36,7 +38,8 @@ Chat.belongsTo(Group);
 User.belongsToMany(Group, {through: UserGroup});
 Group.belongsToMany(User, {through: UserGroup});
 
-
+UserGroup.belongsTo(User);
+UserGroup.belongsTo(Group);
 
 
 //-----------------------------------------------------------------------------------------

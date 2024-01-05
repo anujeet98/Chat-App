@@ -71,7 +71,14 @@ module.exports.signin = async(req,res,next) => {
 
 module.exports.getUsers = async(req, res, next) => {
     try{
-        const allUsers = await User.findAll({attributes: ['id', 'username']});
+        const allUsers = await User.findAll({
+            attributes: ['id', 'username'], 
+            where: {
+                id: {
+                    [Op.notIn]: [req.user.id]
+                }
+            }
+        });
         res.status(200).json(allUsers);
     }
     catch(err){
@@ -86,7 +93,7 @@ module.exports.fetchGroups = async(req, res, next) => {
     try{
         const user = req.user;
         const groups = await user.getGroups();
-        res.status(200).json({groups: groups, message:"success"});
+        res.status(200).json({groups: groups, username: user.username, message:"success"});
     }
     catch(err){
         console.log('fetchGroups-Error: ',err);

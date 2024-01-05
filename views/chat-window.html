@@ -12,42 +12,70 @@
 </head>
 <body>
     <div id="main">
+
         <div id="container1">
-            <div id="groupContainer">
+            <div id="groupContainer" class="container1-content">
                 <div id="groupContainer-header">
                     <img src="../public/image/user.JPG" alt="display.JPG" class="display-img"/>
-                    <button id="newChatBtn">New Chat/Group</button>
+                    <div id="profileNameDiv"></div>
+                    <button id="newChatBtn" onclick="generateGroupForm()">New Chat/Group</button>
                 </div>
                 <div id="groupContainer-body"></div>
             </div>
-            <div id="createGroupContainer" class="hidden">
-                <div id="createGroup-header">
-                    <h2 id="createGroup-header-heading">Create new group</h2>
+            <div id="groupFormContainer" class="container1-content hidden">
+                <div id="groupForm-body" class="container1-body">
+                    <button class="cancelGrpBtn" onclick="container1Cancel()">cancel</button>
+                    <input type="text" id="groupName-create" class="groupName" placeholder="Group Name" required><br>
+                    <textarea id="groupDescription-create" class="groupDescription" placeholder="Group Description"></textarea><br>
+                    <label for="group-userSearch-create">Group Members:</label>
+                    <input type="text" id="group-userSearch-create" class="group-userSearch" placeholder="search.."><br>
+                    <div id="usersList-container-create" class="userList-container"></div>
+                    <button class="button" id="createGrpBtn" onclick="createGroup()">create</button>
                 </div>
-                <div id="createGroup-body">
-                    <input type="text" id="groupName" placeholder="Group Name" required><br>
-                    <textarea id="groupDescription" placeholder="Group Description"></textarea><br>
-                    <input type="text" id="group-userSearch" placeholder="search.."><br>
-                    <div id="usersList-container"></div>
+            </div>
+            <div id="editGroupContainer" class="container1-content hidden">
+                <div id="groupForm-body" class="container1-body">
+                    <button class="cancelGrpBtn" onclick="container1Cancel()">cancel</button>
+                    <input type="text" id="groupName-edit" class="groupName" placeholder="Group Name" required><br>
+                    <textarea id="groupDescription-edit" class="groupDescription" placeholder="Group Description"></textarea><br>
+                    <button id="updateGroupBtn" class="adminBtns" onclick="updateGroup()">update</button><br><br>
+                    <label for="memberList-container">Members:</label>
+                    <div id="memberList-container" class="userList-container"></div>
+                    <button id="addMemberFormBtn" class="adminBtns" onclick="generateAddMemberForm()">Add Members</button><br>
                 </div>
-                <div id="createGroup-footer">
-                    <button class="button" id="cancelGrpBtn">cancel</button>
-                    <button class="button" id="createGrpBtn">create</button>
+            </div>
+
+            <div id="addMemberContainer" class="container1-content hidden">
+                <div id="addMemberForm-body" class="container1-body">
+                    <button class="cancelGrpBtn" onclick="container1Cancel()">cancel</button><br><br>
+                    <label for="group-userSearch-edit">Add Members:</label>
+                    <input type="text" id="group-userSearch-edit" class="group-userSearch" placeholder="search.."><br>
+                    <div id="usersList-container-edit" class="userList-container"></div>
+                    <button id="addMemberBtn" class="adminBtns" onclick="addUsers()">ADD</button><br>
                 </div>
             </div>
         </div>
-        <div id="chat">
-            <div id="chat-header"></div>
-            <div id="chat-body"></div>
-            <div id="chat-footer">
-                <button id="emojiBtn"><img src="../public/image/emojiBtn.png" alt="emj"></button>
-                <input type="text" id="messageBox" placeholder="Your message here...."></input>
-                <div id="attachmentBtn"><img src="../public/image/attachmentBtn.png" alt="atch"></div>
-                <button id="sendBtn"><img src="../public/image/senBtn.png" alt="snd"></button>
+
+        <div id="container2">
+            <div id="container2-chat" class="hidden">
+                <div id="chat-header">
+                    <button id="editGroupBtn" onclick="generateEditGroup()"></button>
+                </div>
+                <div id="chat-body"></div>
+                <div id="chat-footer">
+                    <button id="emojiBtn"><img src="../public/image/emojiBtn.png" alt="emj"></button>
+                    <input type="text" id="messageBox" placeholder="Your message here...."></input>
+                    <div id="attachmentBtn"><img src="../public/image/attachmentBtn.png" alt="atch"></div>
+                    <button id="sendBtn"><img src="../public/image/senBtn.png" alt="snd"></button>
+                </div>
             </div>
+            <div id="container2-default"></div>
         </div>
+
     </div>
 
-    <script src="../public/js/chat.js" rel="javascript"></script>
+    <script src="../public/js/chat-main.js" rel="javascript"></script>
+    <script src="../public/js/chat-emoji.js" rel="javascript"></script>
+    <script src="../public/js/chat-message.js" rel="javascript"></script>
 </body>
 </html>
