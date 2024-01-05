@@ -29,7 +29,8 @@ async function signup(event){
 
         const response = await axios.post("http://localhost:3000/user/signup", reqObj);
         if(response.status === 201){
-            return alert(response.data.message);
+            alert(response.data.message);
+            window.location.href = "../views/sign-in.html";
         }
     }
     catch(err){

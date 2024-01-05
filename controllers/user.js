@@ -1,4 +1,4 @@
-const { Op, literal } = require('sequelize');
+const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const Cryptr = require('cryptr');
 
@@ -89,7 +89,7 @@ module.exports.getUsers = async(req, res, next) => {
 
 
 
-module.exports.fetchGroups = async(req, res, next) => {
+module.exports.getGroups = async(req, res, next) => {
     try{
         const user = req.user;
         const groups = await user.getGroups();

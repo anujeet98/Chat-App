@@ -2,7 +2,6 @@ const { Op} = require('sequelize');
 
 const ChatModel = require('../models/chat');
 const UserModel = require('../models/user');
-const GroupModel = require('../models/group');
 const UserGroupModel = require('../models/user-group');
 
 const inputValidator = require('../util/input-validator');
@@ -20,8 +19,7 @@ module.exports.postChat = async(req, res, next)=>{
         }
 
         const response = await user.createChat({message: message, groupId: groupId});
-        
-        return res.status(200).json({message: "message sent success"});
+        return res.status(201).json({message: "message sent success"});
     }
     catch(err){
         console.error("PostChat-Error: ",err);

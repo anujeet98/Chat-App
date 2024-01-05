@@ -10,13 +10,17 @@ let selectedGroup = -1;
 let selectedGroupBtn = null;
 
 //------------------------------------------------------------------------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', ()=>{
+    reloadPage();
+});
+
 async function reloadPage(){
     try{
         groupContainerBody.innerHTML = '';
         const userGroups = await getUserGroupsAPI();
         document.getElementById('profileNameDiv').innerText = userGroups.data.username;
         userGroups.data.groups.forEach(group => {
-            renderGroup(group.groupName, group.id);
+            renderGroup(group.name, group.id);
         });
     }
     catch(err){
@@ -24,9 +28,7 @@ async function reloadPage(){
     }
 }
 
-document.addEventListener('DOMContentLoaded', ()=>{
-    reloadPage();
-});
+
 
 
 
@@ -143,8 +145,8 @@ function renderEditGroupPage(groupInfo){
     const groupDescription = document.getElementById('groupDescription-edit')
     
     //fill in groupName and groupDescription
-    groupName.value = groupInfo.group.groupName;
-    groupDescription.value = groupInfo.group.groupDescription;
+    groupName.value = groupInfo.group.name;
+    groupDescription.value = groupInfo.group.description;
 
     //fill in memberList Div
     const memberListContainer = document.getElementById('memberList-container');
@@ -193,7 +195,7 @@ function createMemberListDiv(groupInfo,member){
         <div class="userlist-div">
             <div id="userList-username">${member.user.username}</div>
             <div id="userList-admintag">${member.isAdmin?'Admin':''}</div>
-                ${groupInfo.isAdmin ? 
+                ${(groupInfo.isAdmin && member.user.id !== groupInfo.reqUserId) ? 
                     `${adminBtnsDOM}`:``
                 }
         </div>
@@ -299,10 +301,6 @@ async function removeGroupAdmin(groupId, memberId){
 
 async function removeUser(groupId, memberId){
     try{
-        const reqObj = {
-            groupId: groupId,
-            memberId: memberId
-        };
         const response = await axios.delete(`http://localhost:3000/group/remove-user?memberId=${memberId}&groupId=${groupId}`, {headers: {'Authorization': localStorage.getItem('token')}});
         generateEditGroup();
     }

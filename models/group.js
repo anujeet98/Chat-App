@@ -9,11 +9,11 @@ module.exports = sequelize.define('group', {
         primaryKey: true,
         allowNull: false
     },
-    groupName: {
+    name: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    groupDescription: {
+    description: {
         type: Sequelize.STRING,
         allowNull: false
     },

@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+const sequelize = require('../util/db');
 
 const UserModel = require('../models/user');
 const GroupModel = require('../models/group');
@@ -9,20 +10,23 @@ const inputValidator = require('../util/input-validator');
 
 
 module.exports.createGroup = async(req,res,next) => {
+    let tran;
     try{
         const{ groupName, groupDescription, members } = req.body;
         const user = req.user;
         if(inputValidator.text(groupName) || inputValidator.text(groupDescription) || members.length===0){
             return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-groupName/groupDescription/selectedMembers"});
         }
+        
         members.push(user.id);
         members.forEach(member=>{
             if(inputValidator.number(member))
                 return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-selectedMembers"});
         });
 
+        tran = await sequelize.transaction();
         const [newGroup, users] = await Promise.all([
-            GroupModel.create({groupName: groupName, groupDescription: groupDescription, createdBy: user.id}),
+            GroupModel.create({name: groupName, description: groupDescription, createdBy: user.id}),
             UserModel.findAll({
                 where: {
                     id: {
@@ -31,16 +35,15 @@ module.exports.createGroup = async(req,res,next) => {
                 }
             })
         ]);
-
-        if(!users){
-            //rollback and don't create group
-        }
-
         const response= await newGroup.addUsers(users);
         await UserGroupModel.update({ isAdmin: true }, {where: {userId: user.id, groupId: newGroup.id}});
+
+        await tran.commit();
         res.status(200).json({groupCreated: newGroup, userGroup: response});
     }
     catch(err){
+        if(tran)
+            await tran.rollback();
         console.error("createGroup-Error: ",err);
         return res.status(500).json({error: err, message:"something went wrong"});
     }
@@ -71,11 +74,18 @@ try{
     ]);
 
     let userIsAdmin = false;
+    let members = []; 
+    let reqUser; 
     const memberId = membersInfo.map(member => {
-        if(member.user.id === req.user.id)
+        if(member.user.id === req.user.id){
             userIsAdmin = member.isAdmin;
-        return member.user.id
+            reqUser = member;
+        }
+        else    
+            members.push(member)
+        return member.user.id;
     });
+    members.unshift(reqUser);
     const nonMembers = await UserModel.findAll({
         attributes: ['id', 'username', 'email', 'phone'],
         where: {
@@ -84,7 +94,7 @@ try{
             }
         }
     });
-    res.status(200).json({isAdmin:userIsAdmin, group: groupInfo, members: membersInfo, nonMembers: nonMembers});
+    res.status(200).json({isAdmin:userIsAdmin, reqUserId: req.user.id, group: groupInfo, members: members, nonMembers: nonMembers});
 }
 catch(err){
     console.error("getGroupInfo-Error: ",err);
@@ -102,18 +112,6 @@ try{
         {isAdmin: true},
         {where: {groupId:groupId, userId:memberId}}
     );
-
-    //verify req user is admin/aauthenticated for performing change
-    // const result = await UserGroupModel.findAll({
-    //     where:{
-    //         groupId: groupId,
-    //         userId:{
-    //             [Op.in]: [reqUser.id, memberId]
-    //         } 
-    //     }
-    // });
-    // result[1].isAdmin = true;
-    // const response = await result[1].save();
     return res.status(200).json({message: "member updated with Admin role"});
 
 }
@@ -134,17 +132,6 @@ module.exports.removeGroupAdmin = async(req,res,next) => {
             {isAdmin: false},
             {where: {groupId:groupId, userId:memberId}}
         );
-        //verify req user is admin/aauthenticated for performing change
-        // const result = await UserGroupModel.findAll({
-        //     where:{
-        //         groupId: groupId,
-        //         userId:{
-        //             [Op.in]: [reqUser.id, memberId]
-        //         } 
-        //     }
-        // });
-        // result[1].isAdmin = false;
-        // const response = await result[1].save();
         return res.status(200).json({message: "Member removed from Admin role"});
 
     }
@@ -163,13 +150,6 @@ module.exports.removeUser = async(req,res,next) => {
         }
 
         const result = await UserGroupModel.destroy({where: {groupId: groupId, userId: memberId}});
-        // const result = await UserGroupModel.findAll({
-        //     where:{
-        //         groupId: groupId,
-        //         userId: memberId
-        //     } 
-        // });
-        // const response = await UserGroupModel.destroy({where: {groupId: groupId, userId: memberId}});
         return res.status(200).json({message: "member successfully removed", afectedUserCount: result});
     }
     catch(err){
@@ -181,7 +161,6 @@ module.exports.removeUser = async(req,res,next) => {
 module.exports.addUsers = async(req,res,next) => {
     try{
         const{ groupId, members } = req.body;
-        const user = req.user;
         if(inputValidator.number(groupId) || members.length===0){
             return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received groupId/selectedMembers"});
         }
@@ -202,11 +181,11 @@ module.exports.addUsers = async(req,res,next) => {
         ]);
 
         if(!users)
-            return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-selectedMembers"});
+            return res.status(404).json({error:"invalid input parameters", message:"Users not found"});
         if(!group)
-            return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-groupI"})
+            return res.status(404).json({error:"invalid input parameters", message:"Group not found"})
 
-        const response= await group.addUsers(users);
+        await group.addUsers(users);
         return res.status(200).json({message: "users added successfully"});
     }
     catch(err){
@@ -225,12 +204,12 @@ module.exports.updateGroup = async(req,res,next) => {
 
         const group = await GroupModel.findOne({where: {id: groupId}})
         if(!group)
-            return res.status(403).json({message: "Invalid groupId received"});
+            return res.status(404).json({message: "Group not found"});
 
         //else update group name and descr
-        group.groupName = groupName;
-        group.groupDescription = groupDescription;
-        const response = await group.save();
+        group.name = groupName;
+        group.description = groupDescription;
+        await group.save();
         return res.status(200).json({message: "Group update success"});
     }
     catch(err){

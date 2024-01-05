@@ -10,6 +10,6 @@ Router.post('/signin', userController.signin);
 
 Router.get('/get-users', authMiddleware.authenticate, userController.getUsers);
 
-Router.get('/groups', authMiddleware.authenticate, userController.fetchGroups);
+Router.get('/groups', authMiddleware.authenticate, userController.getGroups);
 
 module.exports = Router;
