@@ -381,6 +381,7 @@ async function updateGroup(){
         //Update Chat Header with Group Name
         document.getElementById('editGroupBtn').innerText = groupName;
         alert(response.data.message);
+        reloadPage();
         generateEditGroup();
     }
     catch(err){
@@ -413,6 +414,6 @@ async function createGroup(){
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-// setInterval(()=>{
-//     loadNewMessages(selectedGroup);
-// },2000);
+setInterval(()=>{
+    loadNewMessages(selectedGroup);
+},2000);

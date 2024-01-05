@@ -92,6 +92,10 @@ async function getNewMessages(id, groupId){
     catch(err){
         if(err){
             alert(err.response.data.message);
+            if(err.response.status===403){
+                selectedGroup = -1;
+                location.reload();
+            }
         }
     }
 }
