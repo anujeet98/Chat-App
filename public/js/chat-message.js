@@ -87,7 +87,7 @@ function pushMessages(res){
 
 async function getNewMessages(id, groupId){
     try{
-        return await axios.get(`http://35.153.210.34:4000/chat/fetch?lastMessageId=${id}&groupId=${groupId}`, {headers: {"Authorization": localStorage.getItem("token")}});
+        return await axios.get(`http://35.153.237.118:4000/chat/fetch?lastMessageId=${id}&groupId=${groupId}`, {headers: {"Authorization": localStorage.getItem("token")}});
     }
     catch(err){
         if(err){
@@ -107,7 +107,7 @@ async function sendNewMessage(groupID){
             alert('BAD INPUT PARAMETERS');
         }
         if(message!==null && message!==undefined && message!==""){
-            const response = await axios.post('http://35.153.210.34:4000/chat/send', {message: message, groupId: groupID}, {headers: {"Authorization": localStorage.getItem("token")}});
+            const response = await axios.post('http://35.153.237.118:4000/chat/send', {message: message, groupId: groupID}, {headers: {"Authorization": localStorage.getItem("token")}});
         }
     }
     catch(err){
