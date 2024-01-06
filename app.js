@@ -28,7 +28,7 @@ const app = express();
 app.use(morgan('combined', {stream: accessLogStream}));
 
 app.use(cors({
-    origin: "http:35.153.237.118"
+    origin: ["http://127.0.0.1:5500","http://35.153.237.118/"]
 }));
 app.use(bodyparser.json({extended: false}));
 app.use('/public', express.static(path.join(__dirname, 'public')));
