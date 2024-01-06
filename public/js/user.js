@@ -30,7 +30,7 @@ async function signup(event){
         const response = await axios.post("http://35.153.210.34:4000/user/signup", reqObj);
         if(response.status === 201){
             alert(response.data.message);
-            window.location.href = "../sign-in.html";
+            window.location.href = "sign-in.html";
         }
     }
     catch(err){
@@ -58,7 +58,7 @@ async function signin(event){
             localStorage.removeItem('savedmessages');
             localStorage.setItem('token', response.data.token);
             alert(response.data.message);
-            window.location.href = "../chat-window.html";
+            window.location.href = "chat-window.html";
         }
     }
     catch(err){
