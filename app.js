@@ -60,8 +60,8 @@ UserGroup.belongsTo(Group);
 //-----------------------------------------------------------------------------------------
 const serverSync = async()=>{
     try{
-        await sequelize.sync({force: true});
-        // await sequelize.sync()
+        // await sequelize.sync({force: true});
+        await sequelize.sync()
         app.listen(process.env.APP_PORT || 4000);
         console.log(`server running on PORT: ${process.env.APP_PORT}`);
 
