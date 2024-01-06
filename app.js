@@ -28,7 +28,7 @@ const app = express();
 app.use(morgan('combined', {stream: accessLogStream}));
 
 app.use(cors({
-    origin: "http://127.0.0.1:5500"
+    origin: "http:35.153.237.118"
 }));
 app.use(bodyparser.json({extended: false}));
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -39,6 +39,7 @@ app.use('/chat', chatRoutes);
 app.use('/group', groupRoutes);
 
 app.use((req,res) => {
+    console.log(__dirname, req.url);
     res.sendFile(path.join(__dirname, `/views/${req.url}`));
 })
 
