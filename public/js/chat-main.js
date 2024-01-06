@@ -224,7 +224,7 @@ async function createGroupAPI(groupName, groupDescription, selectedUserList){
             members: selectedUserList
         };
         
-        return await axios.post('http://35.153.237.118:4000/group/create-group/', grpObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        return await axios.post('http://35.153.237.118:80:4000/group/create-group/', grpObj, {headers: {'Authorization': localStorage.getItem('token')}});
     }
     catch(err){
         if(err){
@@ -235,7 +235,7 @@ async function createGroupAPI(groupName, groupDescription, selectedUserList){
 
 async function getGroupInfoAPI(){
     try{
-        return await axios.get(`http://35.153.237.118:4000/group/get-info?groupId=${selectedGroup}`, {headers: {"Authorization": localStorage.getItem("token")}});
+        return await axios.get(`http://35.153.237.118:80:4000/group/get-info?groupId=${selectedGroup}`, {headers: {"Authorization": localStorage.getItem("token")}});
     }
     catch(err){
         if(err){
@@ -246,7 +246,7 @@ async function getGroupInfoAPI(){
 
 async function fetchAllUsersAPI(){
     try{
-        return axios.get('http://35.153.237.118:4000/user/get-users', {headers: {"Authorization": localStorage.getItem("token")}});
+        return axios.get('http://35.153.237.118:80:4000/user/get-users', {headers: {"Authorization": localStorage.getItem("token")}});
     }
     catch{
         if(err){
@@ -258,7 +258,7 @@ async function fetchAllUsersAPI(){
 
 async function getUserGroupsAPI(){
     try{    
-        return await axios.get('http://35.153.237.118:4000/user/groups', {headers: {'Authorization': localStorage.getItem('token')}});
+        return await axios.get('http://35.153.237.118:80:4000/user/groups', {headers: {'Authorization': localStorage.getItem('token')}});
     }
     catch(err){
         if(err){
@@ -273,7 +273,7 @@ async function addGroupAdmin(groupId, memberId){
             groupId: groupId,
             memberId: memberId
         };
-        const response = await axios.put(`http://35.153.237.118:4000/group/add-admin`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.put(`http://35.153.237.118:80:4000/group/add-admin`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         generateEditGroup();
     }
     catch(err){
@@ -289,7 +289,7 @@ async function removeGroupAdmin(groupId, memberId){
             groupId: groupId,
             memberId: memberId
         };
-        const response = await axios.put(`http://35.153.237.118:4000/group/remove-admin`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.put(`http://35.153.237.118:80:4000/group/remove-admin`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         generateEditGroup();
     }
     catch(err){
@@ -301,7 +301,7 @@ async function removeGroupAdmin(groupId, memberId){
 
 async function removeUser(groupId, memberId){
     try{
-        const response = await axios.delete(`http://35.153.237.118:4000/group/remove-user?memberId=${memberId}&groupId=${groupId}`, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.delete(`http://35.153.237.118:80:4000/group/remove-user?memberId=${memberId}&groupId=${groupId}`, {headers: {'Authorization': localStorage.getItem('token')}});
         generateEditGroup();
     }
     catch(err){
@@ -319,7 +319,7 @@ async function updateGroupAPI(groupName, groupDescription){
             groupId: selectedGroup
         };
 
-        return await axios.put('http://35.153.237.118:4000/group/update', reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        return await axios.put('http://35.153.237.118:80:4000/group/update', reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
     }
     catch(err){
         if(err){
@@ -334,7 +334,7 @@ async function addUsersAPI(selectedUsers){
             groupId: selectedGroup,
             members: selectedUsers
         };
-        return await axios.post('http://35.153.237.118:4000/group/add-users/', reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        return await axios.post('http://35.153.237.118:80:4000/group/add-users/', reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
     }
     catch(err){
         if(err){
