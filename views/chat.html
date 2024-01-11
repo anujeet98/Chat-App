@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <!-- <link href="tailwindcss-colors.css" rel="stylesheet"> -->
-    <link href="style.css" rel="stylesheet">
+    <link href="../public/css/chat-css.css" rel="stylesheet">
     
 
     <title>Chat</title>
@@ -42,146 +44,57 @@
             <div class="chat-content">
                 <!-- start content-sidebar -->
                 <div class="content-sidebar">
-                    <div class="content-sidebar-title">Profile Name</div>
-                    <form action="" class="content-sidebar-search">
-                        <input type="text" class="content-sidebar-search-input" placeholder="Search..."/>
-                        <button type="button" class="content-sidebar-search-submit"><i class="ri-search-line"></i></button>
-                    </form>
-                    <!-- start content-groups -->
-                    <div class="content-groups">
-                        <div class="content-groups-title">CHATS</div>
-                        <ul class="content-groups-list">
-                            <li>
-                                <a href="#" class="content-group-btn">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
-                                    <span class="content-groups-info">
-                                        <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
+                    <div id="groupview" class="togglesidebarview-flex">
+                        <div class="content-sidebar-header">
+                            <img class="content-sidebar-image" src="../public/image/user.JPG" alt="">
+                            <div class="content-sidebar-title"></div>
+                            <div class="content-sidebar-newchatbtn"><i viewid="creategroupview" class="ri-chat-new-line"></i></div>    
+                        </div>
+                        <form action="" class="content-sidebar-search">
+                            <input type="text" class="content-sidebar-search-input" placeholder="Search..."/>
+                            <button type="button" class="content-sidebar-search-submit"><i class="ri-search-line"></i></button>
+                        </form>
+                        <!-- start content-groups -->
+                        <div class="content-groups">
+                            <div class="content-groups-title">CHATS</div>
+                            <ul class="content-groups-list">
+                                <!-- <li>
+                                    <a href="#" class="content-group-btn">
+                                        <img class="content-groups-image" src="../public/image/user.JPG" alt="">
+                                        <span class="content-groups-info">
+                                            <span class="content-groups-info-name">Group-I-Name-Is--Mentioned-Here</span>
+                                        </span>
+                                    </a>
+                                </li> -->
+                            </ul>
+                        </div>
+                        <!-- end content-groups -->
                     </div>
-                    <!-- end content-groups -->
+                    <div id="creategroupview" class="togglesidebarview-none">
+                        <button id="creategroupview-backbtn" class="backbtn"><i viewid="groupview" class="ri-arrow-left-line"></i></button>
+                        <input type="text" id="groupName-create" class="groupname-input" placeholder="Group Name" required>
+                        <textarea id="groupDescription-create" class="groupdescription-input" placeholder="Group Description"></textarea>
+                        <label for="userList-container">Group Members</label>
+                        <input type="text" id="group-userSearch-create" class="group-userSearch" placeholder="search..">
+                        <ul id="userList-container-create" class="userList-container"></ul>
+                        <button id="createGroupBtn" viewid="groupview" onclick="createGroup()">create</button>
+                    </div>
+                    <div id="editgroupview" class="togglesidebarview-none">
+                        <button id="editgroupview-backbtn" class="backbtn"><i viewid="groupview" class="ri-arrow-left-line"></i></button>
+                        <input type="text" id="groupName-edit" class="groupname-input" placeholder="Group Name" title="group name" required>
+                        <textarea id="groupDescription-edit" class="groupdescription-input" placeholder="Group Description" title="group description"></textarea>
+                        <button id="updateGroupBtn" class="adminBtns" viewid="groupview" onclick="updateGroup()">update</button>
+                        <label for="memberList-container">Members</label>
+                        <ul id="memberList-container" class="userList-container"></ul>
+                        <button id="addMembersFormBtn" class="adminBtns" viewid="adduserview">Add Members</button>
+                    </div>
+                    <div id="adduserview" class="togglesidebarview-none">
+                        <button id="adduserview-backbtn" class="backbtn"><i viewid="groupview" class="ri-arrow-left-line"></i></button>
+                        <label for="group-userSearch-edit">Add Members:</label>
+                        <input type="text" id="group-userSearch-edit" class="group-userSearch" placeholder="search..">
+                        <ul id="userList-container-add" class="userList-container"></ul>
+                        <button id="addMemberBtn" class="adminBtns" viewid="groupview" onclick="addUsers()">ADD</button>
+                    </div>
                 </div>
                 <!-- end content-sidebar -->
                 <!-- start content-conversation -->
@@ -192,34 +105,15 @@
                 <div class="content-conversation" id="content-conversation-id">
                     <div class="content-conversation-head">
                         <button type="button" class="content-conversation-back" id="content-conversation-back-id"><i class="ri-arrow-left-line"></i></button>
-                        <button type="button" class="content-conversation-profile">
-                            <img class="content-conversation-profile-img" src="../public/image/user.JPG" alt="">
-                            <div class="content-conversation-profile-name">Group-ID 1</div>
+                        <button type="button" class="content-conversation-profile" id="editgroupbtn" viewid="editgroupview">
+                            <img class="content-conversation-profile-img" src="../public/image/user.JPG" alt="profileImage" viewid="editgroupview">
+                            <div class="content-conversation-profile-name" id="conversation-groupname" viewid="editgroupview"></div>
                         </button>
                     </div>
 
                     <div class="content-conversation-body">
                         <ul class="content-conversation-body-wrapper">
-                            <li class="conversation-item">
-                                <div class="conversation-item-box">
-                                    <div class="conversation-item-text">
-                                        <div class="conversation-item-name">Rahul</div>
-                                        <p>jsjaka nkasn dawkask askdnklawn asdkandlkwa asdnaksdklaw andkawndlkad nakwdnaw nklawdlkaw nlkanwklda nlkawnndkla
-                                        nklnwdlknawkldna adwkndlakwn awdknwalkdnal dnalwknlkawn nklwnkldna</p>
-                                        <div class="conversation-item-time">12:30</div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="conversation-item">
-                                <div class="conversation-item-box">
-                                    <div class="conversation-item-text">
-                                        <div class="conversation-item-name">Rahul</div>
-                                        <p>.</p>
-                                        <div class="conversation-item-time">12:30</div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="conversation-item self">
+                            <!-- <li class="conversation-item">
                                 <div class="conversation-item-box">
                                     <div class="conversation-item-text">
                                         <div class="conversation-item-name">Rahul</div>
@@ -233,21 +127,12 @@
                                 <div class="conversation-item-box">
                                     <div class="conversation-item-text">
                                         <div class="conversation-item-name">Rahul</div>
-                                        <p>.</p>
-                                        <div class="conversation-item-time">12:30</div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="conversation-item self">
-                                <div class="conversation-item-box">
-                                    <div class="conversation-item-text">
-                                        <div class="conversation-item-name">Rahul</div>
                                         <p>jsjaka nkasn dawkask askdnklawn asdkandlkwa asdnaksdklaw andkawndlkad nakwdnaw nklawdlkaw nlkanwklda nlkawnndkla
                                         nklnwdlknawkldna adwkndlakwn awdknwalkdnal dnalwknlkawn nklwnkldna</p>
                                         <div class="conversation-item-time">12:30</div>
                                     </div>
                                 </div>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
 
@@ -255,7 +140,7 @@
                         <button type="button" class="content-conversation-footer-button" id="emojibtn"><i class="ri-emotion-line"></i></button>
                         <textarea type="text" rows="1" class="content-conversation-footer-mssgbox" id="mssgbox" placeholder="type here..."></textarea>
                         <button type="button" class="content-conversation-footer-button"><i class="ri-attachment-2"></i></button>
-                        <button type="button" class="content-conversation-footer-button content-conversation-sendbtn"><i class="ri-send-plane-2-line"></i></button>
+                        <button type="button" class="content-conversation-footer-button content-conversation-sendbtn" id="sendBtn"><i class="ri-send-plane-2-line"></i></button>
                     </div>
                 </div>
                 <!-- end content-conversation -->
@@ -265,6 +150,6 @@
         </div>
     </section>
     
-    <script src="main.js" rel="javascript"></script>
+    <script src="../public/js/main.js" rel="javascript"></script>
 </body>
 </html>

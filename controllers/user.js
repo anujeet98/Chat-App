@@ -1,10 +1,11 @@
-const { Op } = require('sequelize');
+const { Op,literal } = require('sequelize');
 const bcrypt = require('bcrypt');
 const Cryptr = require('cryptr');
 
 const User = require('../models/user');
 const inputValidator = require('../util/input-validator');
 const tokenGenereator = require('../util/jwt-token-generator'); 
+const Chat = require('../models/chat');
 
 
 
@@ -61,12 +62,21 @@ module.exports.signin = async(req,res,next) => {
     }
     catch(err){
         console.log('SignUp-Error: ',err);
-        res.status(500).json({error: err, message: "something went wrong"})
+        res.status(500).json({error: err, message: "something went wrong"});
     }
 }
 
 
-
+module.exports.getUserInfo = async(req, res, next) => {
+    try{
+        const user = req.user;
+        res.status(200).json({userid:user.id ,username: user.username});
+    }
+    catch(err){
+        console.log('getUserInfo-Error: ',err);
+        res.status(500).json({error: err, message: "something went wrong"});
+    }
+};
 
 
 module.exports.getUsers = async(req, res, next) => {
@@ -92,8 +102,30 @@ module.exports.getUsers = async(req, res, next) => {
 module.exports.getGroups = async(req, res, next) => {
     try{
         const user = req.user;
-        const groups = await user.getGroups();
+        const groups = await user.getGroups({attributes:['id','name']});
         res.status(200).json({groups: groups, username: user.username, message:"success"});
+    }
+    catch(err){
+        console.log('fetchGroups-Error: ',err);
+        res.status(500).json({error: err, message: "something went wrong"});
+    }
+}
+
+module.exports.getGroupChats = async(req, res, next) => {
+    try{
+        const user = req.user;
+        const groups = await user.getGroups();
+        const groupIds = groups.map(group => group.id);
+        const chats = await Chat.findAll({
+            attributes: ['message','createdAt', 'userId','groupId',[literal('(SELECT `username` FROM `users` WHERE `users`.`id` = `chat`.`userId`)'), 'username']],
+            where: {
+                groupId: {
+                    [Op.in]: groupIds
+                }
+            },
+            order: [['groupId','ASC'],['createdAt', 'ASC']]
+        });
+        res.status(200).json({groupChats: chats});
     }
     catch(err){
         console.log('fetchGroups-Error: ',err);
