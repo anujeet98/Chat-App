@@ -8,8 +8,12 @@ Router.post('/signup', userController.signup);
 
 Router.post('/signin', userController.signin);
 
-Router.get('/get-users', authMiddleware.authenticate, userController.getUsers);
+Router.get('/get-info', authMiddleware.authenticate, userController.getUserInfo);
 
 Router.get('/groups', authMiddleware.authenticate, userController.getGroups);
+
+Router.get('/group-chats', authMiddleware.authenticate, userController.getGroupChats);
+
+Router.get('/get-users', authMiddleware.authenticate, userController.getUsers);
 
 module.exports = Router;

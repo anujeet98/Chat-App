@@ -58,7 +58,7 @@ async function signin(event){
             localStorage.removeItem('savedmessages');
             localStorage.setItem('token', response.data.token);
             alert(response.data.message);
-            window.location.href = "chat-window.html";
+            window.location.href = "chat.html";
         }
     }
     catch(err){

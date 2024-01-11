@@ -39,7 +39,7 @@ module.exports.createGroup = async(req,res,next) => {
         await UserGroupModel.update({ isAdmin: true }, {where: {userId: user.id, groupId: newGroup.id}});
 
         await tran.commit();
-        res.status(200).json({groupCreated: newGroup, userGroup: response});
+        res.status(200).json({groupCreated: newGroup, userGroup: response, message: 'Group has been created.'});
     }
     catch(err){
         if(tran)
@@ -102,6 +102,7 @@ catch(err){
 }
 };
 
+
 module.exports.addGroupAdmin = async(req,res,next) => {
 try{
     const {memberId, groupId} = req.body;
@@ -150,7 +151,7 @@ module.exports.removeUser = async(req,res,next) => {
         }
 
         const result = await UserGroupModel.destroy({where: {groupId: groupId, userId: memberId}});
-        return res.status(200).json({message: "member successfully removed", afectedUserCount: result});
+        return res.status(200).json({message: "Member removed from the group", afectedUserCount: result});
     }
     catch(err){
         console.error("removeUser-Error: ",err);
