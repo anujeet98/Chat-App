@@ -113,7 +113,7 @@ try{
         {isAdmin: true},
         {where: {groupId:groupId, userId:memberId}}
     );
-    return res.status(200).json({message: "member updated with Admin role"});
+    return res.status(200).json({message: "Member updated with Admin role"});
 
 }
 catch(err){
