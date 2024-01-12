@@ -138,8 +138,10 @@
 
                     <div class="content-conversation-footer">
                         <button type="button" class="content-conversation-footer-button" id="emojibtn"><i class="ri-emotion-line"></i></button>
+                        <input type="file" class="choosefile hidden">
+                        <!-- <input type="file" accept="image/*" capture="0" class="choosefile hidden"> -->
                         <textarea type="text" rows="1" class="content-conversation-footer-mssgbox" id="mssgbox" placeholder="type here..."></textarea>
-                        <button type="button" class="content-conversation-footer-button"><i class="ri-attachment-2"></i></button>
+                        <button type="button" class="content-conversation-footer-button" id="attachBtn"><i class="ri-attachment-2"></i></button>
                         <button type="button" class="content-conversation-footer-button content-conversation-sendbtn" id="sendBtn"><i class="ri-send-plane-2-line"></i></button>
                     </div>
                 </div>
@@ -149,7 +151,6 @@
             <!-- end chat-content  -->
         </div>
     </section>
-    
     <script src="../public/js/chat.js" rel="javascript"></script>
 </body>
 </html>

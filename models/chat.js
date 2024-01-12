@@ -11,5 +11,10 @@ module.exports = sequelize.define('chat',{
     message:{
         type: Sequelize.STRING,
         allowNull: false
+    },
+    isFile:{
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
     }
 });

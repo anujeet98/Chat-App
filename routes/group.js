@@ -8,7 +8,7 @@ Router.post('/create-group', authMiddleware.authenticate, groupController.create
 
 Router.get('/get-info', authMiddleware.authenticate, groupController.getGroupInfo);
 
-Router.put('/update', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.updateGroup);
+Router.put('/update-group', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.updateGroup);
 
 Router.put('/add-admin', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.addGroupAdmin);
 
