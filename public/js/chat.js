@@ -12,19 +12,31 @@ const addMembersFormBtn = document.getElementById('addMembersFormBtn');
 const chatContainer = document.querySelector(".content-conversation-body-wrapper");
 const msgBox = document.getElementById("mssgbox");
 const sendBtn = document.getElementById("sendBtn");
+const choosefile = document.querySelector('.choosefile');
+const attachBtn = document.getElementById('attachBtn');
 let EMOJI_PICK_VIEW = false; 
 let SELECTED_GROUP=-1;
 let USER={};
 
 let socket = io('http://35.153.237.118:80');
+function returnFileSize(number) {
+    if (number < 1024) {
+      return `${number} bytes`;
+    } else if (number >= 1024 && number < 1048576) {
+      return `${(number / 1024).toFixed(1)} KB`;
+    } else if (number >= 1048576) {
+      return `${(number / 1048576).toFixed(1)} MB`;
+    }
+  }
+  
 
 socket.on('new-message', msgObj => {
     storeChatsToLS([msgObj]);
     if(msgObj && SELECTED_GROUP===msgObj.groupId){
         if(msgObj.userId === USER.userId)
-            renderMessage(msgObj.username, msgObj.message, 'myMsg');
+            renderMessage(msgObj.username, msgObj.message, 'myMsg', msgObj.isFile?msgObj.isFile:false);
         else    
-            renderMessage(msgObj.username, msgObj.message, 'otherMsg');
+            renderMessage(msgObj.username, msgObj.message, 'otherMsg', msgObj.isFile?msgObj.isFile:false);
     }
 })
 
@@ -94,7 +106,15 @@ editGroupBtn.addEventListener('click', (e) => {
     toggleSideBarView(e);
     changeToMobileSidebarView();
 });
-
+attachBtn.addEventListener('click', ()=>{
+    attachBtn.classList.toggle('selected');
+    msgBox.classList.toggle('hidden');
+    choosefile.classList.toggle('hidden');
+    if(attachBtn.classList.contains('selected'))
+        msgBox.value='';
+    else
+        choosefile.value='';
+});
 
 
 function toggleSideBarView(e){
@@ -180,6 +200,8 @@ async function createGroup(){
             return alert('Kindly fill all the fields and select the users');
         const response = await createGroupAPI(groupName, groupDescription, selectedUserList);
         socket.emit('join-group',[response.data.groupCreated.id]);
+        groupName="";
+        groupDescription="";
         renderGroup([response.data.groupCreated]);
         document.getElementById('creategroupview-backbtn').click();
         alert(response.data.message);
@@ -227,6 +249,7 @@ async function addUsers(){
 
 // ==================================EMOJI-BTN-SCRIPT-START======================================
 emojiBtn.addEventListener('click', ()=>{
+    emojiBtn.classList.toggle('selected');
     if(EMOJI_PICK_VIEW){
         EMOJI_PICK_VIEW=false;
         return chatFooter.removeChild(document.querySelector('emoji-picker'));
@@ -265,9 +288,9 @@ async function loadOldChats(groupId){
         if(savedChats || savedChats!==undefined){
             savedChats.forEach(chat =>{
                 if(+chat.userId === +USER.userId)
-                    renderMessage(chat.username, chat.message, 'myMsg');
-                else
-                    renderMessage(chat.username, chat.message, 'otherMsg');
+                    renderMessage(chat.username, chat.message, 'myMsg', chat.isFile?chat.isFile:false);
+                else    
+                    renderMessage(chat.username, chat.message, 'otherMsg', chat.isFile?chat.isFile:false);
             });
         }
     }
@@ -351,12 +374,15 @@ function renderMemberList(groupInfo,memberListContainer){
     });
 }
 
-function renderMessage(username, msg, mssgType){
+function renderMessage(username, msg, mssgType, isFile){
     const messageItem = `<li class="${mssgType==='myMsg'?'conversation-item self':'conversation-item'}">
         <div class="conversation-item-box">
             <div class="conversation-item-text">
                 <div class="conversation-item-name">${username}</div>
-                <p>${msg}</p>
+                ${isFile===true?
+                    `<a href="${msg}" class="conversation-item-file" title="${msg}"><img src="${msg}" alt="download file" onerror="fileDefaultImage(event)"/></a>`:
+                    `<p>${msg}</p>`
+                }
                 <div class="conversation-item-time">12:30</div>
             </div>
         </div>
@@ -461,7 +487,7 @@ async function updateGroupAPI(groupName, groupDescription){
             groupDescription: groupDescription,
             groupId: SELECTED_GROUP
         };
-        const response = await axios.put('http://35.153.237.118:80/group/update', reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.put('http://35.153.237.118:80/group/update-group', reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         return response;
     }
     catch(err){
@@ -547,21 +573,45 @@ async function addUsersAPI(selectedUsers){
 async function sendNewMessage(groupID){
     try{
         const message = msgBox.value;
+        const file = choosefile.files[0];
         if(groupID===undefined || groupID===null || groupID===-1){
             return alert('BAD INPUT PARAMETERS');
         }
         const currentDate = new Date();
         if(message!==null && message!==undefined && message!==""){
-            const response = await axios.post('http://35.153.237.118:80/chat/send', {message: message, groupId: groupID}, {headers: {"Authorization": localStorage.getItem("token")}});
+            const response = await axios.post('http://35.153.237.118:80/chat/send-message', {message: message, groupId: groupID}, {headers: {"Authorization": localStorage.getItem("token")}});
             
             const msgObj = {
                 message: message,
                 createdAt: `${currentDate.getHours()}:${currentDate.getMinutes()}`,
                 userId: USER.userId,
                 groupId: groupID,
-                username: USER.username
+                username: USER.username,
+                isFile: false
             }
             socket.emit('new-message', groupID, msgObj);
+        }
+        else if (file){
+            if(file.size>5242880)
+                return alert('File upload max limit is 5MB');
+            // if(file.type.startsWith('image/')){
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('groupId',groupID);
+            alert('message will be sent once the file upload completes');
+            const response = await axios.post('http://35.153.237.118:80/chat/send-file',formData, {headers: {"Authorization": localStorage.getItem("token")}});
+            const fileObj = {
+                message: response.data.imageurl,
+                createdAt: `${currentDate.getHours()}:${currentDate.getMinutes()}`,
+                userId: USER.userId,
+                groupId: groupID,
+                username: USER.username,
+                isFile: true
+            }
+            socket.emit('new-message', groupID, fileObj);
+            // }
+            // else
+            //     alert('Please upload a valid image file.');
         }
     }
     catch(err){
@@ -570,4 +620,14 @@ async function sendNewMessage(groupID){
         }
         console.log(err);
     }
+}
+
+
+
+// -------------------------
+
+//download file alternate image load
+function fileDefaultImage(event) {
+  event.target.src = "http://127.0.0.1:5500/public/image/download.png"
+  event.onerror = null
 }

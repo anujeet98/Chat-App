@@ -117,7 +117,7 @@ module.exports.getGroupChats = async(req, res, next) => {
         const groups = await user.getGroups();
         const groupIds = groups.map(group => group.id);
         const chats = await Chat.findAll({
-            attributes: ['message','createdAt', 'userId','groupId',[literal('(SELECT `username` FROM `users` WHERE `users`.`id` = `chat`.`userId`)'), 'username']],
+            attributes: ['message','createdAt', 'userId','groupId',[literal('(SELECT `username` FROM `users` WHERE `users`.`id` = `chat`.`userId`)'), 'username'], 'isFile'],
             where: {
                 groupId: {
                     [Op.in]: groupIds

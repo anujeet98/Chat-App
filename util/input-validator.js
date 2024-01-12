@@ -6,7 +6,14 @@ module.exports.text = (input) => {
 }
 
 module.exports.number = (input) => {
-    if(input === NaN)
+    if(input === undefined || input === NaN)
+        return true;
+    return false;
+}
+
+module.exports.file = (input) => {
+    // if(input === undefined || !input.mimetype.startsWith('image/') || +input.size>5242880)
+    if(input === undefined || +input.size>5242880)
         return true;
     return false;
 }
