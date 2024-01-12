@@ -217,8 +217,8 @@ async function addUsers(){
         if(selectedUserList.length===0)
             return alert('Kindly select the users to add');
     
-        const response = await addUsersAPI(selectedUserList);
-        alert(response.data.message);
+        await addUsersAPI(selectedUserList);
+
     }
     catch(err){
         console.error(err);
@@ -328,7 +328,7 @@ function renderUserList(users, DOMElement){
 }
 
 function renderMemberList(groupInfo,memberListContainer){   
-    const {members, group, reqUserId, isAdmin:reqUserIsAdmin} = groupInfo.data;
+    const {members, group, reqUserId, isAdmin:reqUserIsAdmin} = groupInfo.data;  //ISSUE-ID:#18 user removed from group. null received. update logic in backend to check if user part of group before servicing the request
     members.forEach(member => {
         const adminBtnsDOM = `
                 ${member.isAdmin?
@@ -532,7 +532,8 @@ async function addUsersAPI(selectedUsers){
             groupId: SELECTED_GROUP,
             members: selectedUsers
         };
-        return await axios.post('http://35.153.237.118:80/group/add-users/', reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.post('http://35.153.237.118:80/group/add-users/', reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        return alert(response.data.message);
     }
     catch(err){
         if(err.response){
