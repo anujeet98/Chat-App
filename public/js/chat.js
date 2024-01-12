@@ -179,9 +179,8 @@ async function createGroup(){
         if(groupName===undefined || groupName===null || groupName==='' || groupDescription===undefined || groupDescription===null || groupDescription==='' || selectedUserList.length===0)
             return alert('Kindly fill all the fields and select the users');
         const response = await createGroupAPI(groupName, groupDescription, selectedUserList);
-        const groupList = [];
-        groupList.push(response.data.groupCreated);
-        renderGroup(groupList);
+        socket.emit('join-group',[response.data.groupCreated.id]);
+        renderGroup([response.data.groupCreated]);
         document.getElementById('creategroupview-backbtn').click();
         alert(response.data.message);
         
