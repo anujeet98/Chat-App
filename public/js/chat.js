@@ -188,20 +188,20 @@ async function renderEditGroupPage(groupId){
 
 async function createGroup(){
     try{
-        const groupName = document.getElementById('groupName-create').value;
-        const groupDescription = document.getElementById('groupDescription-create').value;
+        const groupName = document.getElementById('groupName-create');
+        const groupDescription = document.getElementById('groupDescription-create');
         const userList = document.getElementById('userList-container-create');
         const selectedUsers = userList.querySelectorAll('input[type="checkbox"]:checked');
 
         const selectedUserList = [];
         selectedUsers.forEach(e=>selectedUserList.push(e.value));
 
-        if(groupName===undefined || groupName===null || groupName==='' || groupDescription===undefined || groupDescription===null || groupDescription==='' || selectedUserList.length===0)
+        if(groupName.value===undefined || groupName.value===null || groupName.value==='' || groupDescription.value===undefined || groupDescription.value===null || groupDescription.value==='' || selectedUserList.length===0)
             return alert('Kindly fill all the fields and select the users');
         const response = await createGroupAPI(groupName, groupDescription, selectedUserList);
         socket.emit('join-group',[response.data.groupCreated.id]);
-        groupName="";
-        groupDescription="";
+        groupName.value="";
+        groupDescription.value="";
         renderGroup([response.data.groupCreated]);
         document.getElementById('creategroupview-backbtn').click();
         alert(response.data.message);
@@ -628,6 +628,6 @@ async function sendNewMessage(groupID){
 
 //download file alternate image load
 function fileDefaultImage(event) {
-  event.target.src = "http://127.0.0.1:5500/public/image/download.png"
+  event.target.src = "http://35.153.237.118:80/public/image/download.png"
   event.onerror = null
 }
