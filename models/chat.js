@@ -2,19 +2,22 @@ const { Sequelize } = require('sequelize');
 const sequelize = require('../util/db');
 
 module.exports = sequelize.define('chat',{
-    id:{
-        type: Sequelize.INTEGER,
+    id: {
+        type: Sequelize.BIGINT,
         primaryKey: true,
         allowNull: false,
         autoIncrement: true
     },
-    message:{
+    message: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    isFile:{
+    isFile: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false,
-        allowNull: false
-    }
-});
+        defaultValue: false
+    },
+    createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+    },
+},{ timestamps: false });

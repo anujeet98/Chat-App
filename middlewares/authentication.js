@@ -17,13 +17,13 @@ module.exports.authenticate = async(req, res, next) => {
             next();
         }
         else
-            return res.status(404).json({message: "user not verified"});
+            return res.status(404).json({message: "User not verified. Please sign-in again"});
 
     }
     catch(err){
         if(err.name === 'JsonWebTokenError'){
             console.error('JsonWebTokenError-auth: ',err);   
-            return res.status(401).json({ error: 'Unauthorized - Invalid token' });
+            return res.status(401).json({ error: 'User unauthorized. Please sign-in again' });
         }
         console.error('authenticationError: ', err);
         res.status(500).json({error: err, message: "something went wrong"});

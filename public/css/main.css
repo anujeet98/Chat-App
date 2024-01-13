@@ -1,0 +1,224 @@
+
+.header{
+    display: flex;
+    padding: 1%;
+}
+
+#premiumBtn{    
+    padding: 0.6%;
+    margin: 0% 1%;
+    font-family: cursive;
+    border: 0.1px solid black;
+    background-color: rgb(238, 169, 66);    
+    color: white;
+    border-radius: 5px;
+    margin-bottom: 0.5%;
+}
+
+#premiumBtn:hover{
+    background-color: rgb(247, 128, 0);
+}
+
+#premiumTag{    
+    visibility: hidden;
+    color: rgb(171, 3, 3);
+    margin-left: 0.5%;
+    align-self: flex-end;
+}
+
+.pageBtn{
+    margin: 1% 1%;
+}
+
+
+/* ---------------------------------------------------------------------------------------- */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f6e9e9; /* Light grey background color */
+}
+
+.authContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.authContainer-form {
+    background-color: rgba(175, 172, 172, 0.4); /* Light greyish transparent background */
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle lift effect */
+}
+
+.authContainer-table {
+    width: 100%;
+}
+
+.table_data {
+    padding: 5px;
+}
+
+.labels {
+    display: block;
+    font-weight: bold;
+}
+
+/* Responsive Styling */
+@media (max-width: 600px) {
+    .authContainer-form {
+        width: 100%;
+    }
+}
+
+.table_data input{
+    width: 100%;
+}
+
+#submit{
+    background-color: rgb(6, 109, 254);
+    color: white;
+    width: 40%;
+    display: block;
+    margin: 0 auto;
+}
+#submit:hover{
+    background-color: rgb(2, 69, 163);
+}
+
+
+.alertContainer{
+    position: fixed;
+    width: 100%;
+    height: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5% auto;
+    text-align: center;
+}
+
+
+
+#messageAlert{
+    margin: auto;
+    background-color: rgb(3, 229, 3);
+    color: black;
+    padding: 0% 5%;
+    visibility: hidden;
+}
+
+#errorAlert{
+    margin: auto;
+    background-color: rgb(216, 65, 0);
+    color: white;
+    padding: 0% 5%;
+    visibility: hidden;
+}
+
+/* ------------------------------------------------------------- */
+
+.addExpenseContainer{
+    padding: 1%;
+    display: flex   ;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 600px) {
+    #addExpenseContainer {
+        width: 100%;
+    }
+}
+
+
+#expensesContainer{
+    padding: 1%;
+    display: flex   ;
+    justify-content: center;
+    align-items: center;
+}
+
+.expense td{
+    text-align: center;
+    padding: 8px;
+    background-color: rgb(178, 178, 178, 0.4);
+}
+
+@media (max-width: 600px) {
+    #expenseTable {
+        width: 100%;
+    }
+}
+
+/* ---------------------------------------------------------------------------- */
+#leaderboardContainer{
+    padding: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#leaderBoardTable tr th,
+#leaderBoardTable tr td{
+    text-align: center;
+    padding: 10px;
+}
+
+
+@media (max-width: 600px) {
+    #leaderBoardTable {
+        width: 100%;
+    }
+}
+
+/* ------------------------------------------------------------------------------ */
+
+#pageContainer{
+    padding: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dynamicPagingContainer{
+    padding: 1%;
+}
+
+hr{
+    margin: 0%;
+}
+
+.deleteExpense:hover{
+    background-color: rgb(215, 42, 29);
+    color: white;
+}
+
+.editExpense:hover{
+    background-color: rgb(255, 213, 0);
+    color: black;
+}
+
+
+/* #premiumFeatures {
+    display: flex;
+    width: 100%;
+}
+
+#premiumFeatures button {
+    box-sizing: border-box;
+    text-align: center;
+    padding: 10px; /* Adjust as needed */
+    border: 1px solid #ccc; /* Optional: Add border for better visibility */
+    flex: 1; /* Initially, the first button takes 1/3 of the width */
+    max-width: 33%; /* Ensure the maximum width is 1/3 */
+}
+
+/* Additional buttons take an equal share of the space */
+#premiumFeatures button:not(:first-child) {
+    flex: 1; /* Additional buttons take an equal share of the space */
+} */

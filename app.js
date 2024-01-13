@@ -9,17 +9,22 @@ const fs = require('fs');
 const morgan = require('morgan');
 const http = require('http');
 const socket = require('socket.io');
+const { instrument } = require('@socket.io/admin-ui');
 
 const userRoutes = require('./routes/user');
 const chatRoutes = require('./routes/chat');
 const groupRoutes = require('./routes/group');
+const passwordRoutes = require('./routes/password');
 
 const socketService = require('./services/socket');
+const cronService = require('./services/archive-cron');
+cronService.start();
 
 const User = require('./models/user');
 const Chat = require('./models/chat');
 const Group = require('./models/group');
 const UserGroup = require('./models/user-group');
+const ForgetPassword = require('./models/forget-password');
 
 //-----------------------------------------------------------------------------------------
 const accessLogStream = fs.createWriteStream(
@@ -33,7 +38,7 @@ const server = http.createServer(app);
 app.use(morgan('combined', {stream: accessLogStream}));
 
 app.use(cors({
-    origin: ["http://127.0.0.1:5500","http://35.153.237.118/","http://127.0.0.1:5501/"]
+    origin: ["http://127.0.0.1:5500","http://35.153.237.118/", "https://admin.socket.io"]
 }));
 app.use(bodyparser.json({extended: false}));
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -42,6 +47,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/user', userRoutes);
 app.use('/chat', chatRoutes);
 app.use('/group', groupRoutes);
+app.use('/password', passwordRoutes);
 
 app.use((req,res) => {
     console.log(__dirname, req.url);
@@ -61,13 +67,17 @@ Group.belongsToMany(User, {through: UserGroup});
 
 UserGroup.belongsTo(User);
 UserGroup.belongsTo(Group);
+
+User.hasMany(ForgetPassword);
+ForgetPassword.belongsTo(User);
 // ----------------------------------------------------------------------------------------
 const io = socket(server,{
     cors: {
-        origin: ["http://127.0.0.1:5500","http://35.153.237.118/","http://127.0.0.1:5501/"]
+        origin: ["http://127.0.0.1:5500","http://35.153.237.118/", "https://admin.socket.io"]
     }
 });
 io.on("connection", socket => socketService(io,socket));
+instrument(io, { auth: false });
 
 //-----------------------------------------------------------------------------------------
 const serverSync = async()=>{
