@@ -5,7 +5,7 @@ const Cryptr = require('cryptr');
 const User = require('../models/user');
 const inputValidator = require('../util/input-validator');
 const tokenGenereator = require('../util/jwt-token-generator'); 
-const Chat = require('../models/chat');
+const ChatModel = require('../models/chat');
 
 
 
@@ -116,7 +116,7 @@ module.exports.getGroupChats = async(req, res, next) => {
         const user = req.user;
         const groups = await user.getGroups();
         const groupIds = groups.map(group => group.id);
-        const chats = await Chat.findAll({
+        const chats = await ChatModel.findAll({
             attributes: ['message','createdAt', 'userId','groupId',[literal('(SELECT `username` FROM `users` WHERE `users`.`id` = `chat`.`userId`)'), 'username'], 'isFile'],
             where: {
                 groupId: {

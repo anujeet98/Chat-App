@@ -14,8 +14,8 @@ module.exports.createGroup = async(req,res,next) => {
     try{
         const{ groupName, groupDescription, members } = req.body;
         const user = req.user;
-        if(inputValidator.text(groupName) || inputValidator.text(groupDescription) || members.length===0){
-            return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-groupName/groupDescription/selectedMembers"});
+        if(inputValidator.text(groupName) || inputValidator.text(groupDescription)){
+            return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-groupName/groupDescription"});
         }
         
         members.push(user.id);
