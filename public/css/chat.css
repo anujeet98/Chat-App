@@ -345,12 +345,14 @@ body {
 }
 
 .conversation-item-file{
-    /* box-sizing: border-box; */
-    box-shadow: 2px 2px 16px -4px rgb(0, 0, 0);
+    box-shadow: 2px 2px 16px -4px rgba(0, 0, 0, 0.503);
 }
-.conversation-item-file>*{
-    max-width: 400px;
-    max-height: 300px;
+.conversation-item-file>* {
+    max-width: 260px;
+    max-height: 160px;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
 }
 
 .conversation-item-time{
