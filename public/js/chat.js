@@ -198,7 +198,7 @@ async function createGroup(){
 
         if(groupName.value===undefined || groupName.value===null || groupName.value==='' || groupDescription.value===undefined || groupDescription.value===null || groupDescription.value==='' || selectedUserList.length===0)
             return alert('Kindly fill all the fields and select the users');
-        const response = await createGroupAPI(groupName, groupDescription, selectedUserList);
+        const response = await createGroupAPI(groupName.value, groupDescription.value, selectedUserList);
         socket.emit('join-group',[response.data.groupCreated.id]);
         groupName.value="";
         groupDescription.value="";
