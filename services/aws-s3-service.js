@@ -1,8 +1,6 @@
 const AWS = require('aws-sdk');
 
 exports.uploadToS3 = (filename, data) => {
-    console.log(process.env.AWS_S3_KEY);
-    console.log(process.env.AWS_S3_SECRET)
     const awsS3 = new AWS.S3({
         accessKeyId: process.env.AWS_S3_KEY,
         secretAccessKey: process.env.AWS_S3_SECRET,
