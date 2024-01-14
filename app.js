@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express =  require('express');
 const bodyparser = require('body-parser');
-const { Sequelize } = require('sequelize');
 const sequelize = require('./util/db');
 const cors = require('cors');
 const path = require('path');
@@ -38,7 +37,7 @@ const server = http.createServer(app);
 app.use(morgan('combined', {stream: accessLogStream}));
 
 app.use(cors({
-    origin: ["http://127.0.0.1:5500","http://35.153.237.118/"]
+    origin: [`${process.env.accepted_origins}`]
 }));
 app.use(bodyparser.json({extended: false}));
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -51,7 +50,15 @@ app.use('/password', passwordRoutes);
 
 app.use((req,res) => {
     console.log(__dirname, req.url);
-    res.sendFile(path.join(__dirname, `/views/${req.url}`));
+    const fileExists = fs.existsSync(path.join(__dirname, `/views/${req.url}`));
+    if(req.url === '/'){
+        req.url = 'sign-in.html';
+        return res.sendFile(path.join(__dirname, `/views/${req.url}`));
+    }
+    else if(fileExists)
+        return res.sendFile(path.join(__dirname, `/views/${req.url}`));
+    else
+        return res.sendFile(path.join(__dirname, `/views/error404.html`));
 })
 
 
@@ -73,7 +80,7 @@ ForgetPassword.belongsTo(User);
 // ----------------------------------------------------------------------------------------
 const io = socket(server,{
     cors: {
-        origin: ["http://127.0.0.1:5500","http://35.153.237.118/", "https://admin.socket.io"]
+        origin: [`${process.env.accepted_origins}`]
     }
 });
 io.on("connection", socket => socketService(io,socket));
@@ -86,7 +93,6 @@ const serverSync = async()=>{
         await sequelize.sync()
         server.listen(process.env.APP_PORT || 4000);
         console.log(`server running on PORT: ${process.env.APP_PORT}`);
-
     }   
     catch(err){
         console.error(err);
