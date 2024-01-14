@@ -329,7 +329,7 @@ function renderGroup(groups){
         groupList.innerHTML += `
             <li>
                 <a href="#" class="content-group-btn" onclick="loadGroup(event,'${group.name}',${group.id})">
-                    <img class="content-groups-image" src="../public/image/user.JPG" alt="">
+                    <img class="content-groups-image" src="../public/image/user.jpg" alt="">
                     <span class="content-groups-info">
                         <span class="content-groups-info-name">${group.name}</span>
                     </span>
@@ -421,7 +421,7 @@ async function getUserGroupsAPI(cb){
 
 async function getUserGroupChatsAPI(cb){
     try{    
-        const response = await axios.get('http://35.153.237.118:80/user/group-chats', {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.get('http://35.153.237.118:80/chat/get-chats', {headers: {'Authorization': localStorage.getItem('token')}});
         cb(response)
     }
     catch(err){

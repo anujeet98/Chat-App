@@ -1,12 +1,12 @@
 
 module.exports.text = (input) => {
-    if(input === undefined || input.length===0)
+    if(input === undefined || input === null || input.length===0)
         return true;
     return false;
 }
 
 module.exports.number = (input) => {
-    if(input === undefined || input === NaN)
+    if(input === undefined || input === null || input === NaN)
         return true;
     return false;
 }

@@ -1,11 +1,10 @@
-const { Op,literal } = require('sequelize');
+const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const Cryptr = require('cryptr');
 
-const User = require('../models/user');
+const UserModel = require('../models/user');
 const inputValidator = require('../util/input-validator');
 const tokenGenereator = require('../util/jwt-token-generator'); 
-const ChatModel = require('../models/chat');
 
 
 
@@ -16,14 +15,14 @@ module.exports.signup = async(req,res,next) => {
             return res.status(400).json({error: "bad input parameters", message: "Invalid input received"});
         }
 
-        const existingUser = await User.findOne({where: {email: email}});
+        const existingUser = await UserModel.findOne({where: {email: email}});
         if(existingUser){
             return res.status(400).json({message: "Email already exists.\nKindly login with your credentials"});
         }
 
         const hash = await bcrypt.hash(password, 10);
-        await User.create({username: username, email: email, phone: phone, password: hash});
-        res.status(201).json({message: "User added successfully"});
+        await UserModel.create({username: username, email: email, phone: phone, password: hash});
+        res.status(201).json({message: "User sign-up successfully"});
     }
     catch(err){
         console.log('SignUp-Error: ',err);
@@ -36,9 +35,9 @@ module.exports.signin = async(req,res,next) => {
     try{
         const {email_phone, password} = req.body;
         if(inputValidator.text(email_phone), inputValidator.text(password)){
-            return res.status(400).json({error: "bad input parameters", message: "Invalid input received"});
+            return res.status(400).json({error: "Bad input parameters", message: "Invalid input received"});
         }
-        const existingUser = await User.findOne({
+        const existingUser = await UserModel.findOne({
             where: {
                 [Op.or]: {
                     email: email_phone,
@@ -56,9 +55,9 @@ module.exports.signin = async(req,res,next) => {
                 return res.status(201).json({token: jwtToken, message: "User login successful"});
             }
             else
-                return res.status(401).json({message: "Incorrect user password.\nUser not authenticated."});
+                return res.status(401).json({message: "Incorrect user password."});
         }
-        res.status(404).json({message: "User not found"});
+        res.status(404).json({message: "Incorrect user email/phone"});
     }
     catch(err){
         console.log('SignUp-Error: ',err);
@@ -81,7 +80,7 @@ module.exports.getUserInfo = async(req, res, next) => {
 
 module.exports.getUsers = async(req, res, next) => {
     try{
-        const allUsers = await User.findAll({
+        const allUsers = await UserModel.findAll({
             attributes: ['id', 'username'], 
             where: {
                 id: {
@@ -103,29 +102,7 @@ module.exports.getGroups = async(req, res, next) => {
     try{
         const user = req.user;
         const groups = await user.getGroups({attributes:['id','name']});
-        res.status(200).json({groups: groups, username: user.username, message:"success"});
-    }
-    catch(err){
-        console.log('fetchGroups-Error: ',err);
-        res.status(500).json({error: err, message: "something went wrong"});
-    }
-}
-
-module.exports.getGroupChats = async(req, res, next) => {
-    try{
-        const user = req.user;
-        const groups = await user.getGroups();
-        const groupIds = groups.map(group => group.id);
-        const chats = await ChatModel.findAll({
-            attributes: ['message','createdAt', 'userId','groupId',[literal('(SELECT `username` FROM `users` WHERE `users`.`id` = `chat`.`userId`)'), 'username'], 'isFile'],
-            where: {
-                groupId: {
-                    [Op.in]: groupIds
-                }
-            },
-            order: [['groupId','ASC'],['createdAt', 'ASC']]
-        });
-        res.status(200).json({groupChats: chats});
+        res.status(200).json({groups: groups});
     }
     catch(err){
         console.log('fetchGroups-Error: ',err);
