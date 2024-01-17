@@ -35,9 +35,9 @@ const server = http.createServer(app);
 // app.use(helmet()); 
 // app.use(compression());
 app.use(morgan('combined', {stream: accessLogStream}));
-
+console.log(process.env.ACCEPTED_ORIGINS)
 app.use(cors({
-    origin: [`${process.env.accepted_origins}`]
+    origin: JSON.parse(`${process.env.ACCEPTED_ORIGINS}`)
 }));
 app.use(bodyparser.json({extended: false}));
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -80,7 +80,7 @@ ForgetPassword.belongsTo(User);
 // ----------------------------------------------------------------------------------------
 const io = socket(server,{
     cors: {
-        origin: [`${process.env.accepted_origins}`]
+        origin: JSON.parse(`${process.env.ACCEPTED_ORIGINS}`)
     }
 });
 io.on("connection", socket => socketService(io,socket));
