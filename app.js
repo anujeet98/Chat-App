@@ -35,7 +35,6 @@ const server = http.createServer(app);
 // app.use(helmet()); 
 // app.use(compression());
 app.use(morgan('combined', {stream: accessLogStream}));
-console.log(process.env.ACCEPTED_ORIGINS)
 app.use(cors({
     origin: JSON.parse(`${process.env.ACCEPTED_ORIGINS}`)
 }));
