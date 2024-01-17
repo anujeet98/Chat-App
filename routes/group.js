@@ -1,7 +1,7 @@
 const express = require('express');
 const groupController = require('../controllers/group');
 const authMiddleware = require('../middlewares/authentication');
-const adminAuthMiddleware = require('../middlewares/authenticateAdmin');
+const adminAuthMiddleware = require('../middlewares/authenticate-admin');
 const Router = express.Router();
 
 Router.post('/create-group', authMiddleware.authenticate, groupController.createGroup);

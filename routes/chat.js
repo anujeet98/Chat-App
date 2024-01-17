@@ -8,6 +8,8 @@ Router.post('/send-message', authMiddleware.authenticate, chatController.postCha
 
 Router.post('/send-file', authMiddleware.authenticate, multer.upload, chatController.postChatFile);
 
+Router.get('/get-chats', authMiddleware.authenticate, multer.upload, chatController.getGroupChats);
+
 // Router.get('/fetch', authMiddleware.authenticate, chatController.getChats);
 
 module.exports = Router;

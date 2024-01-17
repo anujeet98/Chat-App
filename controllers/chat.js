@@ -1,8 +1,7 @@
-const { Op} = require('sequelize');
+const { Op, literal } = require('sequelize');
 const AwsS3Service = require('../services/aws-s3-service')
 
 const ChatModel = require('../models/chat');
-const UserModel = require('../models/user');
 const UserGroupModel = require('../models/user-group');
 
 const inputValidator = require('../util/input-validator');
@@ -52,6 +51,27 @@ module.exports.postChatFile = async(req, res, next)=>{
     catch(err){
         console.error("PostChat-Error: ",err);
         return res.status(500).json({error: err, message:"something went wrong"});
+    }
+}
+
+module.exports.getGroupChats = async(req, res, next) => {
+    try{
+        const user = req.user;
+        const groups = await user.getGroups({attributes: ['id']});
+        const chats = await ChatModel.findAll({
+            attributes: ['message','createdAt', 'userId','groupId',[literal('(SELECT `username` FROM `users` WHERE `users`.`id` = `chat`.`userId`)'), 'username'], 'isFile'],
+            where: {
+                groupId: {
+                    [Op.in]: groups.map(group => group.id)
+                }
+            },
+            order: [['groupId','ASC'],['createdAt', 'ASC']]
+        });
+        res.status(200).json({groupChats: chats});
+    }
+    catch(err){
+        console.log('fetchGroups-Error: ',err);
+        res.status(500).json({error: err, message: "something went wrong"});
     }
 }
 

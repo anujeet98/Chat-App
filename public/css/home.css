@@ -1,0 +1,35 @@
+body{
+    font-family: sans-serif;
+}
+
+.main{
+    max-width: 980px;
+}
+
+.side-image{
+    width: 300px;
+    box-sizing: border-box;
+}
+
+
+.right-box{
+    padding: 40px 30px 40px 40px;
+}
+
+
+@media only screen and (max-width: 750px){
+    .box-area{
+        margin: 0 10px;
+    }
+    .left-box{
+        height: 100px;
+        overflow: hidden;
+    }
+    .right-box{
+        padding: 20px;
+    }
+}
+
+.inactive{
+    display: none;
+}
