@@ -17,8 +17,9 @@ const attachBtn = document.getElementById('attachBtn');
 let EMOJI_PICK_VIEW = false; 
 let SELECTED_GROUP=-1;
 let USER={};
+const BACKEND_ADDRESS = 'http://35.153.237.118:80';
 
-let socket = io('http://35.153.237.118:80');
+let socket = io(`${BACKEND_ADDRESS}`);
 function returnFileSize(number) {
     if (number < 1024) {
       return `${number} bytes`;
@@ -393,7 +394,7 @@ function renderMessage(username, msg, mssgType, isFile){
 //++++++++++++++++++    API    ++++++++++++++++++++++++++
 async function getUserInfoAPI(cb){
     try{
-        const response = await axios.get('http://35.153.237.118:80/user/get-info', {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.get(`${BACKEND_ADDRESS}/user/get-info`, {headers: {'Authorization': localStorage.getItem('token')}});
         cb(response);
     }
     catch(err){
@@ -407,7 +408,7 @@ async function getUserInfoAPI(cb){
 
 async function getUserGroupsAPI(cb){
     try{    
-        const response = await axios.get('http://35.153.237.118:80/user/groups', {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.get(`${BACKEND_ADDRESS}/user/groups`, {headers: {'Authorization': localStorage.getItem('token')}});
         cb(response)
     }
     catch(err){
@@ -421,7 +422,7 @@ async function getUserGroupsAPI(cb){
 
 async function getUserGroupChatsAPI(cb){
     try{    
-        const response = await axios.get('http://35.153.237.118:80/chat/get-chats', {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.get(`${BACKEND_ADDRESS}/chat/get-chats`, {headers: {'Authorization': localStorage.getItem('token')}});
         cb(response)
     }
     catch(err){
@@ -435,7 +436,7 @@ async function getUserGroupChatsAPI(cb){
 
 async function fetchAllUsersAPI(){
     try{
-        const response = await axios.get('http://35.153.237.118:80/user/get-users', {headers: {"Authorization": localStorage.getItem("token")}});
+        const response = await axios.get(`${BACKEND_ADDRESS}/user/get-users`, {headers: {"Authorization": localStorage.getItem("token")}});
         return response;
     }
     catch{
@@ -455,7 +456,7 @@ async function createGroupAPI(groupName, groupDescription, selectedUserList){
             members: selectedUserList
         };
         
-        const response = await axios.post('http://35.153.237.118:80/group/create-group/', grpObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.post(`${BACKEND_ADDRESS}/group/create-group/`, grpObj, {headers: {'Authorization': localStorage.getItem('token')}});
         return response;
     }
     catch(err){
@@ -469,7 +470,7 @@ async function createGroupAPI(groupName, groupDescription, selectedUserList){
 
 async function getGroupInfoAPI(groupId){
     try{
-        const response = await axios.get(`http://35.153.237.118:80/group/get-info?groupId=${groupId}`, {headers: {"Authorization": localStorage.getItem("token")}});
+        const response = await axios.get(`${BACKEND_ADDRESS}/group/get-info?groupId=${groupId}`, {headers: {"Authorization": localStorage.getItem("token")}});
         return response;
     }
     catch(err){
@@ -488,7 +489,7 @@ async function updateGroupAPI(groupName, groupDescription){
             groupDescription: groupDescription,
             groupId: SELECTED_GROUP
         };
-        const response = await axios.put('http://35.153.237.118:80/group/update-group', reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.put(`${BACKEND_ADDRESS}/group/update-group`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         return response;
     }
     catch(err){
@@ -506,7 +507,7 @@ async function addGroupAdmin(groupId, memberId){
             groupId: groupId,
             memberId: memberId
         };
-        const response = await axios.put(`http://35.153.237.118:80/group/add-admin`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.put(`${BACKEND_ADDRESS}/group/add-admin`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         alert(response.data.message);
         renderEditGroupPage(groupId);
     }
@@ -525,7 +526,7 @@ async function removeGroupAdmin(groupId, memberId){
             groupId: groupId,
             memberId: memberId
         };
-        const response = await axios.put(`http://35.153.237.118:80/group/remove-admin`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.put(`${BACKEND_ADDRESS}/group/remove-admin`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         renderEditGroupPage(groupId);
         alert(response.data.message);
     }
@@ -540,7 +541,7 @@ async function removeGroupAdmin(groupId, memberId){
 
 async function removeUser(groupId, memberId){
     try{
-        const response = await axios.delete(`http://35.153.237.118:80/group/remove-user?memberId=${memberId}&groupId=${groupId}`, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.delete(`${BACKEND_ADDRESS}/group/remove-user?memberId=${memberId}&groupId=${groupId}`, {headers: {'Authorization': localStorage.getItem('token')}});
         renderEditGroupPage(groupId);
         alert(response.data.message);
     }
@@ -559,7 +560,7 @@ async function addUsersAPI(selectedUsers){
             groupId: SELECTED_GROUP,
             members: selectedUsers
         };
-        const response = await axios.post('http://35.153.237.118:80/group/add-users/', reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.post(`${BACKEND_ADDRESS}/group/add-users/`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         return alert(response.data.message);
     }
     catch(err){
@@ -580,7 +581,7 @@ async function sendNewMessage(groupID){
         }
         const currentDate = new Date();
         if(message!==null && message!==undefined && message!==""){
-            const response = await axios.post('http://35.153.237.118:80/chat/send-message', {message: message, groupId: groupID}, {headers: {"Authorization": localStorage.getItem("token")}});
+            const response = await axios.post(`${BACKEND_ADDRESS}/chat/send-message`, {message: message, groupId: groupID}, {headers: {"Authorization": localStorage.getItem("token")}});
             
             const msgObj = {
                 message: message,
@@ -600,7 +601,7 @@ async function sendNewMessage(groupID){
             formData.append('file', file);
             formData.append('groupId',groupID);
             alert('message will be sent once the file upload completes');
-            const response = await axios.post('http://35.153.237.118:80/chat/send-file',formData, {headers: {"Authorization": localStorage.getItem("token")}});
+            const response = await axios.post(`${BACKEND_ADDRESS}/chat/send-file`,formData, {headers: {"Authorization": localStorage.getItem("token")}});
             const fileObj = {
                 message: response.data.imageurl,
                 createdAt: `${currentDate.getHours()}:${currentDate.getMinutes()}`,
@@ -629,6 +630,6 @@ async function sendNewMessage(groupID){
 
 //download file alternate image load
 function fileDefaultImage(event) {
-  event.target.src = "http://35.153.237.118:80/public/image/download.png"
+  event.target.src = `${BACKEND_ADDRESS}/public/image/download.png`
   event.onerror = null
 }

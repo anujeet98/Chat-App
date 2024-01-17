@@ -22,7 +22,7 @@ module.exports.signup = async(req,res,next) => {
 
         const hash = await bcrypt.hash(password, 10);
         await UserModel.create({username: username, email: email, phone: phone, password: hash});
-        res.status(201).json({message: "User sign-up successfully"});
+        res.status(201).json({message: "User Signed-up. Please sign-in to continue"});
     }
     catch(err){
         console.log('SignUp-Error: ',err);

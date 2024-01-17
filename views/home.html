@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <link href="../public/css/home.css" rel="stylesheet">
+    
+    <link rel="icon" type="image/x-icon" src="..public/image/favicon.ico">
+    <title>Socio-Chat</title>
+    
+</head>
+<body>
+    <!-- main container -->
+    <div class="container d-flex justify-content-center align-items-center min-vh-100 main">
+        <!-- login continer -->
+        <div class="row border rounded-5 p-3 bg-white shadow box-area">
+            <!-- left-box -->
+            <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column bg-info left-box">
+                <div class="featured-image mb-3">
+                    <img src="../public/image/display-login.png" alt="" class="image-fluid ps-5 pe-5 side-image">
+                </div>
+                <p class="text-white fs-2 fw-5">Some Text</p>
+                <small class="text-wrap text-center pb-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor, cum.</small>
+            </div>
+            <!-- right box -->
+            <div class="col-md-6 right-box">
+                <div id="form" class="row align-items-center">
+                    
+                    <!-- Signin form -->
+                    <div id="sign-in" class="inactive mb-2 pb-4">
+                        <div class="header-text mb-4">
+                            <h4>Welcome back, 🤗</h4>
+                            <small>Sign in to your account and continue your journey with us.</small>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="email_phone" id="email_phone" class="form-control form-control-lg bg-light fs-6" placeholder="Email / Phone" required>
+                        </div>
+                        <div class="input-group mb-1">
+                            <input type="password" name="password" id="password-signin" class="form-control form-control-lg bg-light fs-6" placeholder="Password" required>
+                        </div>   
+                        <div class="input-group mb-2 justify-content-end">
+                            <a href="#" name="forgotpsswd" id="forgotpsswd"><p><a class="toggle-form" role="button" formid="forget-password" onclick="toggleForm(event)">Forgot Passowrd?</a></p>
+                        </div>
+                        <div class="input-group mb-1 justify-content-center">
+                            <button id="signin" class="submitBtn btn btn-lg btn-primary w-100 fs-6">Sign In</button>
+                        </div>
+                        <div class="input-group mb-5 justify-content-start">
+                            <small>Don't have account?&nbsp;<a class="toggle-form" role="button" formid="sign-up" onclick="toggleForm(event)">Sign Up</a></small>
+                        </div>
+                    </div>
+
+                    <!-- Signup form -->
+                    <div id="sign-up" class="">
+                        <div class="header-text mb-4">
+                            <h4>Hello friend, 👋</h4>
+                            <p>Join our community by creating a new account. </p>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="username" id="username" class="form-control form-control-lg bg-light fs-6" placeholder="Username" required>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="email" name="email" id="email" class="form-control form-control-lg bg-light fs-6" placeholder="Email" required>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="number" name="phone" id="phone" class="form-control form-control-lg bg-light fs-6" placeholder="Phone" required>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" name="password" id="password-signup" class="form-control form-control-lg bg-light fs-6" placeholder="Password" required>
+                        </div>   
+                        <div class="input-group mb-1 justify-content-center">
+                            <button id="signup" class="submitBtn btn btn-lg btn-primary w-100 fs-6">Sign Up</button>
+                        </div>
+                        <div class="input-group justify-content-start">
+                            <small>Already have an account?&nbsp;<a class="toggle-form" role="button" formid="sign-in" onclick="toggleForm(event)">Sign In</a></small>
+                        </div>
+                    </div>
+
+                    <!-- forget-password form -->
+                    <div id="forget-password" class="inactive mb-5 pb-4">
+                        <div class="header-text mb-5">
+                            <h4>Forgot your password? 🤔</h4>
+                            <p>Enter your email, and we'll send you a reset link. Quick and easy! 🚀</p>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="email" name="fg-email" id="fg-email" class="form-control form-control-lg bg-light fs-6" placeholder="Email" required>
+                        </div>
+                        <!-- <div class="input-group mb-3">
+                            <input type="number" name="fg-phone" id="fg-phone" class="form-control form-control-lg bg-light fs-6" placeholder="Phone" required>
+                        </div> -->
+                        <div class="input-group mb-1 justify-content-center">
+                            <button id="resetpsswd" class="submitBtn btn btn-lg btn-primary w-100 fs-6">Reset</button>
+                        </div>
+                        <div class="input-group mb-4 justify-content-start">
+                            <small>Go back to&nbsp;<a class="toggle-form" formid="sign-in" role="button" onclick="toggleForm(event)">Sign In</a></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="../public/js/home.js" rel="javascript"></script>
+</body>
+</html>
