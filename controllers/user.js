@@ -11,9 +11,12 @@ const tokenGenereator = require('../util/jwt-token-generator');
 module.exports.signup = async(req,res,next) => {
     try{
         const {username, email, phone, password} = req.body;
-        if(inputValidator.text(username), inputValidator.text(email), inputValidator.text(phone), inputValidator.text(password)){
+        if(inputValidator.text(username), inputValidator.text(email), inputValidator.text(phone), inputValidator.text(password))
             return res.status(400).json({error: "bad input parameters", message: "Invalid input received"});
-        }
+        if(inputValidator.email(email))
+            return res.status(400).json({error: "bad input parameters", message: "Invalid email received"});
+        if(inputValidator.phone(phone))
+            return res.status(400).json({error: "bad input parameters", message: "Invalid phone number received"});
 
         const existingUser = await UserModel.findOne({where: {email: email}});
         if(existingUser){
@@ -22,7 +25,7 @@ module.exports.signup = async(req,res,next) => {
 
         const hash = await bcrypt.hash(password, 10);
         await UserModel.create({username: username, email: email, phone: phone, password: hash});
-        res.status(201).json({message: "User Signed-up. Please sign-in to continue"});
+        res.status(201).json({message: "User account created. \nPlease sign-in to continue"});
     }
     catch(err){
         console.log('SignUp-Error: ',err);
@@ -50,8 +53,10 @@ module.exports.signin = async(req,res,next) => {
             if(passwordMatch){
                 const cryptr = new Cryptr(process.env.CRYPT_SECRET);
                 const encryptedId = cryptr.encrypt(existingUser.id);
-                const encryptedUserEmail = cryptr.encrypt(existingUser.email)
-                const jwtToken = tokenGenereator({userId: encryptedId, userEmail: encryptedUserEmail});
+                const encryptedUserEmail = cryptr.encrypt(existingUser.email);
+                const expirationTimeInSeconds = 3600;
+                const tokenExpiry = Math.floor(Date.now() / 1000) + expirationTimeInSeconds;
+                const jwtToken = tokenGenereator({userId: encryptedId, userEmail: encryptedUserEmail, exp: tokenExpiry});
                 return res.status(201).json({token: jwtToken, message: "User login successful"});
             }
             else
