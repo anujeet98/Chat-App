@@ -17,14 +17,15 @@ module.exports.authenticate = async(req, res, next) => {
             next();
         }
         else
-            return res.status(404).json({message: "User not verified. Please sign-in again"});
+            return res.status(404).json({error: "User not verified", message: "User not verified. \nPlease sign-in again"});
 
     }
     catch(err){
-        if(err.name === 'JsonWebTokenError'){
-            console.error('JsonWebTokenError-auth: ',err);   
-            return res.status(401).json({ error: 'User unauthorized. Please sign-in again' });
-        }
+        if(err.name === 'JsonWebTokenError')
+            return res.status(401).json({ error: 'User unauthorized', message: 'User unauthorized. \nPlease sign-in again'});
+        if(err.name === 'TokenExpiredError')
+            return res.status(401).json({error: 'Token expired', message: 'Authentication token expired. \nPlease sign in again'});
+
         console.error('authenticationError: ', err);
         res.status(500).json({error: err, message: "something went wrong"});
     }

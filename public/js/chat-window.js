@@ -30,6 +30,11 @@ function returnFileSize(number) {
     }
   }
   
+function authErrorHandling(err){
+    if(err.response)
+        alert(err.response.data.message);
+        return window.location.href = "home.html";
+}
 
 socket.on('new-message', msgObj => {
     storeChatsToLS([msgObj]);
@@ -399,6 +404,8 @@ async function getUserInfoAPI(cb){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
@@ -413,6 +420,8 @@ async function getUserGroupsAPI(cb){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
@@ -427,6 +436,8 @@ async function getUserGroupChatsAPI(cb){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
@@ -441,6 +452,8 @@ async function fetchAllUsersAPI(){
     }
     catch{
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
@@ -461,6 +474,8 @@ async function createGroupAPI(groupName, groupDescription, selectedUserList){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
@@ -475,6 +490,8 @@ async function getGroupInfoAPI(groupId){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
@@ -494,6 +511,8 @@ async function updateGroupAPI(groupName, groupDescription){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             alert(err.response.data.message);
         }
         console.log(err);
@@ -513,6 +532,8 @@ async function addGroupAdmin(groupId, memberId){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
@@ -532,6 +553,8 @@ async function removeGroupAdmin(groupId, memberId){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
@@ -547,6 +570,8 @@ async function removeUser(groupId, memberId){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
@@ -565,6 +590,8 @@ async function addUsersAPI(selectedUsers){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
@@ -618,6 +645,8 @@ async function sendNewMessage(groupID){
     }
     catch(err){
         if(err.response){
+            if(err.response.status === 401)
+                return authErrorHandling(err);
             return alert(err.response.data.message);
         }
         console.log(err);
