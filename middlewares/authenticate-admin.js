@@ -4,7 +4,7 @@ const inputValidator = require('../util/input-validator');
 module.exports.AdminAuth = async(req, res, next) => {
     try{
         const reqUser = req.user;
-        const groupId = req.query.groupId || req.body.groupId;
+        const groupId = req.params.groupId;
         if(inputValidator.number(groupId)){
             return res.status(400).json({error: "bad input parameters", message: "invalid input provided-groupId"});
         }

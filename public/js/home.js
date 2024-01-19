@@ -66,7 +66,7 @@ async function signup(event){
             phone: phone.value
         }
 
-        const response = await axios.post(`${BACKEND_ADDRESS}/user/signup`, reqObj);
+        const response = await axios.post(`${BACKEND_ADDRESS}/users/signup`, reqObj);
         if(response.status === 201){
             alert(response.data.message);
             // window.location.href = "sign-in.html";
@@ -95,7 +95,7 @@ async function signin(event){
             password: passwordSignIn.value,
         }
 
-        const response = await axios.post(`${BACKEND_ADDRESS}/user/signin`, reqObj);
+        const response = await axios.post(`${BACKEND_ADDRESS}/users/signin`, reqObj);
         if(response.status === 201){
             localStorage.removeItem('savedmessages');
             localStorage.setItem('token', response.data.token);
@@ -118,7 +118,7 @@ async function forgetPassword(e){
             return alert('kindly fill your email');
         }
     
-        const response = await axios.get(`${BACKEND_ADDRESS}/password/forgotpassword/${forgetEmail.value}`);
+        const response = await axios.get(`${BACKEND_ADDRESS}/password/forget/${forgetEmail.value}`);
         if(response.status === 200){
             alert(response.data.message);
         }

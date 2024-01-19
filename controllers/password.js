@@ -4,7 +4,6 @@ const mailjet = require('node-mailjet').Client.apiConnect(
 );
 const uuid = require('uuid');
 const bcrypt = require('bcrypt');
-
 const User = require('../models/user');
 const ForgetPasswordModel = require('../models/forget-password');
 const inputValidator = require('../util/input-validator');
@@ -19,20 +18,18 @@ exports.forgetPassword = async(req, res, next) => {
         if(user){
             const id = uuid.v4();
             await user.createForget_password({id, active: true});   
-
             const request = await mailjet.post('send').request({
                 FromEmail: process.env.FP_SENDER_EMAIL,
                 FromName: process.env.FP_SENDER_NAME,
-                Subject: 'PASSWORD-RESET: Chat App',
+                Subject: 'PASSWORD-RESET: Socio-Chat',
                 'Text-part':
                   'Dear member,',
                 'Html-part': `
-                    <h1>Chat App - Password Reset</h1><br>
+                    <h1 style="display: flex; align-items: center;"><img src="https://xpense-tracker-app.s3.amazonaws.com/logo.PNG" style="height: 36px;"> - Password Reset</h1><br>
                     <br>
-                    <h3>Dear ${user.username},</h3><br>
+                    <h3>Dear ${user.username},</h3>
+                    <p>Please use the following link to <a href="${process.env.BACKEND_ADDR}/password/reset/${id}">reset</a> your password.</p>
                     <br>
-                    <p>Please use the following link to </p> <a href="${process.env.BACKEND_ADDR}/password/resetpassword/${id}">reset</a> <p> your password.</p><br>
-                    <br><br>
                     <h5>Thank You<h5><br>
                 `,
                 Recipients: [{ Email: email }],
@@ -61,7 +58,7 @@ exports.resetPassword = async (req, res, next) => {
                 res.status(200).sendFile('reset-password.html',{root: 'views'});
         }
         else{
-            res.status(401).json({error: 'Invalid request recieved'});
+            res.status(401).json({error: 'Invalid request recieved, password reset link expired. Please retry again.'});
         }
     }
     catch(err){
@@ -78,7 +75,7 @@ exports.updatePassword = async (req, res, next) => {
         const newPassword = req.body.newPassword;
 
         if(inputValidator.text(requestId) || inputValidator.text(newPassword)){
-            return res.status(400).json({ error: 'bad input parameters' });
+            return res.status(422).json({ error: 'bad input parameters' });
         }
 
         const passwordRequest = await ForgetPasswordModel.findOne({where: {id: requestId}});

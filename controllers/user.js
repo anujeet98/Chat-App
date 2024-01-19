@@ -12,11 +12,11 @@ module.exports.signup = async(req,res,next) => {
     try{
         const {username, email, phone, password} = req.body;
         if(inputValidator.text(username), inputValidator.text(email), inputValidator.text(phone), inputValidator.text(password))
-            return res.status(400).json({error: "bad input parameters", message: "Invalid input received"});
+            return res.status(422).json({error: "bad input parameters", message: "Invalid input received"});
         if(inputValidator.email(email))
-            return res.status(400).json({error: "bad input parameters", message: "Invalid email received"});
+            return res.status(422).json({error: "bad input parameters", message: "Invalid email received"});
         if(inputValidator.phone(phone))
-            return res.status(400).json({error: "bad input parameters", message: "Invalid phone number received"});
+            return res.status(422).json({error: "bad input parameters", message: "Invalid phone number received"});
 
         const existingUser = await UserModel.findOne({where: {email: email}});
         if(existingUser){
@@ -38,7 +38,7 @@ module.exports.signin = async(req,res,next) => {
     try{
         const {email_phone, password} = req.body;
         if(inputValidator.text(email_phone), inputValidator.text(password)){
-            return res.status(400).json({error: "Bad input parameters", message: "Invalid input received"});
+            return res.status(422).json({error: "Bad input parameters", message: "Invalid input received"});
         }
         const existingUser = await UserModel.findOne({
             where: {

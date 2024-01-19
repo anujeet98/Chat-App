@@ -4,14 +4,20 @@ const authMiddleware = require('../middlewares/authentication');
 
 const Router = express.Router();
 
-Router.post('/signup', userController.signup);
+//user-signin:          POST /users/signin
+//user-signup:          POST /users/signup
+//get-all-users:        GET  /users/
+//get-user-info:        GET  /users/self
+//get-user-groups:      GET  /users/self/groups
 
 Router.post('/signin', userController.signin);
 
-Router.get('/get-info', authMiddleware.authenticate, userController.getUserInfo);
+Router.post('/signup', userController.signup);
 
-Router.get('/groups', authMiddleware.authenticate, userController.getGroups);
+Router.get('/', authMiddleware.authenticate, userController.getUsers);
 
-Router.get('/get-users', authMiddleware.authenticate, userController.getUsers);
+Router.get('/self', authMiddleware.authenticate, userController.getUserInfo);
+
+Router.get('/self/groups', authMiddleware.authenticate, userController.getGroups);
 
 module.exports = Router;

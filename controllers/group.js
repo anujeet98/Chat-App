@@ -1,9 +1,12 @@
-const { Op } = require('sequelize');
+const { Op, literal } = require('sequelize');
 const sequelize = require('../util/db');
 
 const UserModel = require('../models/user');
 const GroupModel = require('../models/group');
+const ChatModel = require('../models/chat');
 const UserGroupModel = require('../models/user-group');
+
+const AwsS3Service = require('../services/aws-s3-service');
 
 const inputValidator = require('../util/input-validator');
 
@@ -15,13 +18,13 @@ module.exports.createGroup = async(req,res,next) => {
         const{ groupName, groupDescription, members } = req.body;
         const user = req.user;
         if(inputValidator.text(groupName) || inputValidator.text(groupDescription)){
-            return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-groupName/groupDescription"});
+            return res.status(422).json({error:"invalid input parameters", message:"invalid parameters received-groupName/groupDescription"});
         }
         
         members.push(user.id);
         members.forEach(member=>{
             if(inputValidator.number(member))
-                return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-selectedMembers"});
+                return res.status(422).json({error:"invalid input parameters", message:"invalid parameters received-selectedMembers"});
         });
 
         tran = await sequelize.transaction();
@@ -52,9 +55,9 @@ module.exports.createGroup = async(req,res,next) => {
 
 module.exports.getGroupInfo = async(req,res,next) => {
 try{
-    const groupId = req.query.groupId;
+    const groupId = req.params.groupId;
     if(inputValidator.number(groupId)){
-        return res.status(400).json({error:"invalid input parameters", message:"invalid parameter received-GroupId"});
+        return res.status(422).json({error:"invalid input parameters", message:"invalid parameter received-GroupId"});
     }
     const [groupInfo, membersInfo] = await Promise.all([
         GroupModel.findOne({where: {id: groupId}}),
@@ -103,51 +106,44 @@ catch(err){
 };
 
 
-module.exports.addGroupAdmin = async(req,res,next) => {
-try{
-    const {memberId, groupId} = req.body;
-    if(inputValidator.number(memberId) || inputValidator.number(groupId)){
-        return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-memberId/GroupId"});
-    }
-    const result = await UserGroupModel.update(
-        {isAdmin: true},
-        {where: {groupId:groupId, userId:memberId}}
-    );
-    return res.status(200).json({message: "Member updated with Admin role"});
-
-}
-catch(err){
-    console.error("addToAdmin-Error: ",err);
-    return res.status(500).json({error: err, message:"something went wrong"});
-}
-};
-
-
-module.exports.removeGroupAdmin = async(req,res,next) => {
+module.exports.updateAdminStatus = async(req,res,next) => {
     try{
-        const {memberId, groupId} = req.body;
+        const {memberId, groupId} = req.params;
+        const { adminAction } = req.body;
         if(inputValidator.number(memberId) || inputValidator.number(groupId)){
-            return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-memberId/GroupId"});
+            return res.status(422).json({error:"invalid input parameters", message:"invalid parameters received-memberId/GroupId"});
         }
-        const result = await UserGroupModel.update(
-            {isAdmin: false},
-            {where: {groupId:groupId, userId:memberId}}
-        );
-        return res.status(200).json({message: "Member removed from Admin role"});
 
+        if(adminAction === 'add'){
+            await UserGroupModel.update(
+                {isAdmin: true},
+                {where: {groupId:groupId, userId:memberId}}
+            );
+            return res.status(200).json({message: "Member updated with Admin role"});
+        }   
+        else if (adminAction === 'remove') {
+            await UserGroupModel.update(
+                {isAdmin: false},
+                {where: {groupId:groupId, userId:memberId}}
+            );
+            return res.status(200).json({message: "Member removed from Admin role"});
+        }
+        
+        return res.status(422).json({ error: 'Invalid action specified', message: 'Invalid adminAction specified'});
     }
     catch(err){
-        console.error("removeAdmin-Error: ",err);
+        console.error("updateAdminStatus-Error: ",err);
         return res.status(500).json({error: err, message:"something went wrong"});
     }
 };
 
 
+
 module.exports.removeUser = async(req,res,next) => {
     try{
-        const {memberId, groupId} = req.query;
+        const {groupId, memberId} = req.params;
         if(inputValidator.number(memberId) || inputValidator.number(groupId)){
-            return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-memberId/GroupId"});
+            return res.status(422).json({error:"invalid input parameters", message:"invalid parameters received-memberId/GroupId"});
         }
 
         const result = await UserGroupModel.destroy({where: {groupId: groupId, userId: memberId}});
@@ -161,13 +157,14 @@ module.exports.removeUser = async(req,res,next) => {
 
 module.exports.addUsers = async(req,res,next) => {
     try{
-        const{ groupId, members } = req.body;
+        const{ members } = req.body;
+        const groupId = req.params.groupId;
         if(inputValidator.number(groupId) || members.length===0){
-            return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received groupId/selectedMembers"});
+            return res.status(422).json({error:"invalid input parameters", message:"invalid parameters received groupId/selectedMembers"});
         }
         members.forEach(member=>{
             if(inputValidator.number(member))
-                return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-selectedMembers"});
+                return res.status(422).json({error:"invalid input parameters", message:"invalid parameters received-selectedMembers"});
         });
 
         const [group, users] = await Promise.all([
@@ -198,9 +195,10 @@ module.exports.addUsers = async(req,res,next) => {
 
 module.exports.updateGroup = async(req,res,next) => {
     try{
-        const {groupName, groupDescription, groupId} = req.body;
+        const {groupName, groupDescription} = req.body;
+        const groupId = req.params.groupId;
         if(inputValidator.text(groupName) || inputValidator.text(groupDescription), inputValidator.number(groupId)){
-            return res.status(400).json({error:"invalid input parameters", message:"invalid parameters received-groupName/groupDescription/groupId"});
+            return res.status(422).json({error:"invalid input parameters", message:"invalid parameters received-groupName/groupDescription/groupId"});
         }
 
         const group = await GroupModel.findOne({where: {id: groupId}})
@@ -218,3 +216,111 @@ module.exports.updateGroup = async(req,res,next) => {
         return res.status(500).json({error: err, message:"something went wrong"});
     }
 }
+
+
+
+module.exports.postTextMessage = async(req, res, next)=>{
+    try{
+        const message = req.body.message;
+        const groupId = req.params.groupId;
+        const user = req.user;
+        if(inputValidator.text(message) || inputValidator.number(groupId))
+            return res.status(422).json({error: "bad input parameters", message: "invalid input provided"});
+        
+        const userGroupCheck = await UserGroupModel.findOne({where: {groupId: groupId, userId: user.id}});
+        if(!userGroupCheck){
+            return res.status(403).json({message: 'user not part of the requested group'});
+        }
+
+        const response = await user.createChat({message: message, groupId: groupId, isFile: false});
+        return res.status(201).json({message: "message sent success"});
+    }
+    catch(err){
+        console.error("PostChat-Error: ",err);
+        return res.status(500).json({error: err, message:"something went wrong"});
+    }
+}
+
+
+module.exports.postFileMessage = async(req, res, next)=>{
+    try{
+        const {file, user} = req;
+        const groupId = req.params.groupId;
+
+        if(inputValidator.file(file) || inputValidator.number(groupId))
+            return res.status(422).json({error: "bad input parameters", message: "invalid input provided. File upload max limit is 5MB"});
+        
+        const userGroupCheck = await UserGroupModel.findOne({where: {groupId: groupId, userId: user.id}});
+        if(!userGroupCheck){
+            return res.status(403).json({message: 'user not part of the requested group'});
+        }
+
+        const filename = `chatfile_${user.id}_${groupId}_${new Date()}_${file.originalname}`;
+        const fileUrl = await AwsS3Service.uploadToS3(filename, file.buffer);
+
+
+        const response = await user.createChat({message: fileUrl, groupId: groupId, isFile: true});
+        return res.status(201).json({imageurl: fileUrl, message: "message sent success"});
+    }
+    catch(err){
+        console.error("PostChat-Error: ",err);
+        return res.status(500).json({error: err, message:"something went wrong"});
+    }
+}
+
+module.exports.getGroupMessages = async(req, res, next) => {
+    try{
+        const user = req.user;
+        const groups = await user.getGroups({attributes: ['id']});
+        const chats = await ChatModel.findAll({
+            attributes: ['message','createdAt', 'userId','groupId',[literal('(SELECT `username` FROM `users` WHERE `users`.`id` = `chat`.`userId`)'), 'username'], 'isFile'],
+            where: {
+                groupId: {
+                    [Op.in]: groups.map(group => group.id)
+                }
+            },
+            order: [['groupId','ASC'],['createdAt', 'ASC']]
+        });
+        res.status(200).json({groupChats: chats});
+    }
+    catch(err){
+        console.log('fetchGroups-Error: ',err);
+        res.status(500).json({error: err, message: "something went wrong"});
+    }
+}
+
+// module.exports.getChats = async(req, res, next)=>{
+//     try{
+//         const lastMessageId = req.query.lastMessageId;
+//         const groupId = req.query.groupId;
+//         const user = req.user;
+//         if(inputValidator.number(lastMessageId) || inputValidator.number(groupId)){
+//             return res.status(400).json({error: "bad input parameters", message: "invalid input provided"});
+//         }
+
+//         const userGroupCheck = await UserGroupModel.findOne({where: {groupId: groupId, userId: user.id}});
+//         if(!userGroupCheck){
+//             return res.status(403).json({message: 'user not part of the requested group'});
+//         }
+
+//         const response = await ChatModel.findAll({
+//             include: [{
+//                 model: UserModel,
+//                 attributes: ['username','id']
+//             }],
+//             attributes: ['id', 'createdAt', 'updatedAt', 'message', 'groupId'],
+//             where: { 
+//                 id: {
+//                     [Op.gt]: lastMessageId
+//                 },
+//                 groupId: groupId
+//             }
+//         });
+
+//         res.status(200).json({thisUser: req.user.username, userId: req.user.id, groupId:groupId, messageInfo:response});
+//     }
+//     catch(err){
+//         console.error("getChats-Error: ",err);
+//         return res.status(500).json({error: err, message:"something went wrong"});
+//     }
+// }
