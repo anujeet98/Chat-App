@@ -1,12 +1,12 @@
 const { Sequelize } = require('sequelize');
 const sequelize = require('../util/db');
 
-module.exports = sequelize.define('chat',{
+module.exports = sequelize.define('archived_chat',{
     id: {
         type: Sequelize.BIGINT,
         primaryKey: true,
         allowNull: false,
-        autoIncrement: true
+        autoIncrement: true        
     },
     message: {
         type: Sequelize.STRING,
@@ -18,6 +18,12 @@ module.exports = sequelize.define('chat',{
     },
     createdAt: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    userId:{
+        type: Sequelize.INTEGER,
+    },
+    groupId:{
+        type: Sequelize.INTEGER,
     },
 },{ timestamps: false });

@@ -21,10 +21,11 @@ module.exports.authenticate = async(req, res, next) => {
 
     }
     catch(err){
-        if(err.name === 'JsonWebTokenError'){
-            console.error('JsonWebTokenError-auth: ',err);   
-            return res.status(401).json({ error: 'Unauthorized - Invalid token' });
-        }
+        if(err.name === 'JsonWebTokenError')
+            return res.status(401).json({ error: 'User unauthorized', message: 'User unauthorized. \nPlease sign-in again'});
+        if(err.name === 'TokenExpiredError')
+            return res.status(401).json({error: 'Token expired', message: 'Authentication token expired. \nPlease sign in again'});
+
         console.error('authenticationError: ', err);
         res.status(500).json({error: err, message: "something went wrong"});
     }

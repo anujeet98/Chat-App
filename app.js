@@ -14,11 +14,13 @@ const cronService = require('./services/archive-cron');
 cronService.start();
 
 const userRoutes = require('./routes/user');
-const chatRoutes = require('./routes/chat');
 const groupRoutes = require('./routes/group');
+const passwordRoutes = require('./routes/password');
 const passwordRoutes = require('./routes/password');
 
 const socketService = require('./services/socket');
+const cronService = require('./services/archive-cron');
+cronService.start();
 const cronService = require('./services/archive-cron');
 cronService.start();
 
@@ -45,9 +47,8 @@ app.use(Sentry.Handlers.requestHandler());  //sentry logging
 // app.use(helmet()); 
 // app.use(compression());
 app.use(morgan('combined', {stream: accessLogStream}));
-
 app.use(cors({
-    origin: ["http://127.0.0.1:5500","http://35.153.237.118/","http://127.0.0.1:5501/"]
+    origin: JSON.parse(`${process.env.ACCEPTED_ORIGINS}`)
 }));
 app.use(express.json({extended: false}));
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -106,7 +107,6 @@ const serverSync = async()=>{
         await sequelize.sync()
         server.listen(process.env.APP_PORT || 4000);
         console.log(`server running on PORT: ${process.env.APP_PORT}`);
-
     }   
     catch(err){
         console.error(err);

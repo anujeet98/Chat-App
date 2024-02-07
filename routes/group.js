@@ -1,21 +1,40 @@
 const express = require('express');
+const multer = require('../middlewares/multer');
 const groupController = require('../controllers/group');
 const authMiddleware = require('../middlewares/authentication');
-const adminAuthMiddleware = require('../middlewares/authenticateAdmin');
+const adminAuthMiddleware = require('../middlewares/authenticate-admin');
 const Router = express.Router();
 
-Router.post('/create-group', authMiddleware.authenticate, groupController.createGroup);
+//get-group-msgs:       GET /groups/messages
+//create-group:         POST groups/
+//get-group-info:       GET groups/:groupId
+//update-group:         PUT groups/:groupId
+//add-member:           POST /groups/:groupId/member
+//remove-member:        DELETE /groups/:groupId/member
+//update-admin-status:  PUT /groups/:groupId/admins/:memberId
 
-Router.get('/get-info', authMiddleware.authenticate, groupController.getGroupInfo);
+//send-text-msg:        POST /groups/:groupId/messages/text
+//send-file-msg:        POST /groups/:groupId/messages/file
 
-Router.put('/update', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.updateGroup);
+Router.get('/messages', authMiddleware.authenticate, multer.upload, groupController.getGroupMessages);
 
-Router.put('/add-admin', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.addGroupAdmin);
+Router.post('/', authMiddleware.authenticate, groupController.createGroup);
 
-Router.put('/remove-admin', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.removeGroupAdmin);
+Router.get('/:groupId', authMiddleware.authenticate, groupController.getGroupInfo);
 
-Router.delete('/remove-user', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.removeUser);
+Router.put('/:groupId', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.updateGroup);
 
-Router.post('/add-users', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.addUsers)
+Router.post('/:groupId/members', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.addUsers);
+
+Router.delete('/:groupId/members/:memberId', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.removeUser);
+
+Router.put('/:groupId/admins/:memberId', authMiddleware.authenticate, adminAuthMiddleware.AdminAuth, groupController.updateAdminStatus);
+
+
+Router.post('/:groupId/messages/text', authMiddleware.authenticate, groupController.postTextMessage);
+
+Router.post('/:groupId/messages/file', authMiddleware.authenticate, multer.upload, groupController.postFileMessage);
+
+// Router.get('/fetch', authMiddleware.authenticate, groupController.getChats);
 
 module.exports = Router;
