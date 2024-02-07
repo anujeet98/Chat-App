@@ -17,24 +17,25 @@ const attachBtn = document.getElementById('attachBtn');
 let EMOJI_PICK_VIEW = false; 
 let SELECTED_GROUP=-1;
 let USER={};
-const BACKEND_ADDRESS = 'http://35.153.237.118:80';
+const BACKEND_ADDRESS = 'http://localhost:4000';
+
+const api = axios.create({
+    baseURL: `http://${BACKEND_ADDRESS}`,
+});
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response.status === 401) {
+            alert('Token expired or unauthorized. Redirecting to login.');
+            localStorage.removeItem('token');
+            window.location.href = '/home.html';
+        }
+        return Promise.reject(error);
+    }
+);
 
 let socket = io(`${BACKEND_ADDRESS}`);
-function returnFileSize(number) {
-    if (number < 1024) {
-      return `${number} bytes`;
-    } else if (number >= 1024 && number < 1048576) {
-      return `${(number / 1024).toFixed(1)} KB`;
-    } else if (number >= 1048576) {
-      return `${(number / 1048576).toFixed(1)} MB`;
-    }
-  }
-  
-function authErrorHandling(err){
-    if(err.response)
-        alert(err.response.data.message);
-        return window.location.href = "home.html";
-}
 
 socket.on('new-message', msgObj => {
     storeChatsToLS([msgObj]);
@@ -150,6 +151,16 @@ function changeToMobileSidebarView(){
     //conversation-view disable for small screen display
     document.getElementById('content-conversation-id').classList.remove('active');
 }
+
+function returnFileSize(number) {
+    if (number < 1024) {
+      return `${number} bytes`;
+    } else if (number >= 1024 && number < 1048576) {
+      return `${(number / 1024).toFixed(1)} KB`;
+    } else if (number >= 1048576) {
+      return `${(number / 1048576).toFixed(1)} MB`;
+    }
+  }
 
 async function renderEditGroupPage(groupId){
     try{
@@ -399,7 +410,7 @@ function renderMessage(username, msg, mssgType, isFile){
 //++++++++++++++++++    API    ++++++++++++++++++++++++++
 async function getUserInfoAPI(cb){
     try{
-        const response = await axios.get(`${BACKEND_ADDRESS}/users/self`, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await api.get(`${BACKEND_ADDRESS}/users/self`, {headers: {'Authorization': localStorage.getItem('token')}});
         cb(response);
     }
     catch(err){
@@ -415,7 +426,7 @@ async function getUserInfoAPI(cb){
 
 async function getUserGroupsAPI(cb){
     try{    
-        const response = await axios.get(`${BACKEND_ADDRESS}/users/self/groups`, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await api.get(`${BACKEND_ADDRESS}/users/self/groups`, {headers: {'Authorization': localStorage.getItem('token')}});
         cb(response)
     }
     catch(err){
@@ -431,7 +442,7 @@ async function getUserGroupsAPI(cb){
 
 async function getUserGroupChatsAPI(cb){
     try{    
-        const response = await axios.get(`${BACKEND_ADDRESS}/groups/messages`, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await api.get(`${BACKEND_ADDRESS}/groups/messages`, {headers: {'Authorization': localStorage.getItem('token')}});
         cb(response)
     }
     catch(err){
@@ -447,7 +458,7 @@ async function getUserGroupChatsAPI(cb){
 
 async function fetchAllUsersAPI(){
     try{
-        const response = await axios.get(`${BACKEND_ADDRESS}/users/`, {headers: {"Authorization": localStorage.getItem("token")}});
+        const response = await api.get(`${BACKEND_ADDRESS}/users/`, {headers: {"Authorization": localStorage.getItem("token")}});
         return response;
     }
     catch{
@@ -469,7 +480,7 @@ async function createGroupAPI(groupName, groupDescription, selectedUserList){
             members: selectedUserList
         };
         
-        const response = await axios.post(`${BACKEND_ADDRESS}/groups/`, grpObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await api.post(`${BACKEND_ADDRESS}/groups/`, grpObj, {headers: {'Authorization': localStorage.getItem('token')}});
         return response;
     }
     catch(err){
@@ -485,7 +496,7 @@ async function createGroupAPI(groupName, groupDescription, selectedUserList){
 
 async function getGroupInfoAPI(groupId){
     try{
-        const response = await axios.get(`${BACKEND_ADDRESS}/groups/${groupId}`, {headers: {"Authorization": localStorage.getItem("token")}});
+        const response = await api.get(`${BACKEND_ADDRESS}/groups/${groupId}`, {headers: {"Authorization": localStorage.getItem("token")}});
         return response;
     }
     catch(err){
@@ -505,7 +516,7 @@ async function updateGroupAPI(groupName, groupDescription){
             groupName: groupName,
             groupDescription: groupDescription,
         };
-        const response = await axios.put(`${BACKEND_ADDRESS}/groups/${SELECTED_GROUP}`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await api.put(`${BACKEND_ADDRESS}/groups/${SELECTED_GROUP}`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         return response;
     }
     catch(err){
@@ -524,7 +535,7 @@ async function updateAdminStatus(groupId, memberId, action){
         const reqObj ={
             adminAction: action
         };
-        const response = await axios.put(`${BACKEND_ADDRESS}/groups/${groupId}/admins/${memberId}`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await api.put(`${BACKEND_ADDRESS}/groups/${groupId}/admins/${memberId}`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         alert(response.data.message);
         renderEditGroupPage(groupId);
     }
@@ -541,7 +552,7 @@ async function updateAdminStatus(groupId, memberId, action){
 
 async function removeUser(groupId, memberId){
     try{
-        const response = await axios.delete(`${BACKEND_ADDRESS}/groups/${groupId}/members/${memberId}`, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await api.delete(`${BACKEND_ADDRESS}/groups/${groupId}/members/${memberId}`, {headers: {'Authorization': localStorage.getItem('token')}});
         renderEditGroupPage(groupId);
         alert(response.data.message);
     }
@@ -561,7 +572,7 @@ async function addUsersAPI(selectedUsers){
         const reqObj = {
             members: selectedUsers
         };
-        const response = await axios.post(`${BACKEND_ADDRESS}/groups/${SELECTED_GROUP}/members/`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await api.post(`${BACKEND_ADDRESS}/groups/${SELECTED_GROUP}/members/`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         return alert(response.data.message);
     }
     catch(err){
@@ -584,7 +595,7 @@ async function sendNewMessage(groupID){
         }
         const currentDate = new Date();
         if(message!==null && message!==undefined && message!==""){
-            const response = await axios.post(`${BACKEND_ADDRESS}/groups/${groupID}/messages/text`, {message: message}, {headers: {"Authorization": localStorage.getItem("token")}});
+            const response = await api.post(`${BACKEND_ADDRESS}/groups/${groupID}/messages/text`, {message: message}, {headers: {"Authorization": localStorage.getItem("token")}});
             
             const msgObj = {
                 message: message,
@@ -604,7 +615,7 @@ async function sendNewMessage(groupID){
             formData.append('file', file);
             formData.append('groupId',groupID);
             alert('message will be sent once the file upload completes');
-            const response = await axios.post(`${BACKEND_ADDRESS}/groups/${groupID}/messages/file`,formData, {headers: {"Authorization": localStorage.getItem("token")}});
+            const response = await api.post(`${BACKEND_ADDRESS}/groups/${groupID}/messages/file`,formData, {headers: {"Authorization": localStorage.getItem("token")}});
             const fileObj = {
                 message: response.data.imageurl,
                 createdAt: `${currentDate.getHours()}:${currentDate.getMinutes()}`,
