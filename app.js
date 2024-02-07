@@ -11,7 +11,6 @@ const socket = require('socket.io');
 const { instrument } = require('@socket.io/admin-ui');
 
 const userRoutes = require('./routes/user');
-const chatRoutes = require('./routes/chat');
 const groupRoutes = require('./routes/group');
 const passwordRoutes = require('./routes/password');
 
@@ -42,9 +41,8 @@ app.use(bodyparser.json({extended: false}));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 //------------------------------------------------------------------------------------------
-app.use('/user', userRoutes);
-app.use('/chat', chatRoutes);
-app.use('/group', groupRoutes);
+app.use('/users', userRoutes);
+app.use('/groups', groupRoutes);
 app.use('/password', passwordRoutes);
 
 app.use((req,res) => {

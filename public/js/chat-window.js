@@ -349,7 +349,7 @@ function renderUserList(users, DOMElement){
     DOMElement.innerHTML='';
     users.forEach(user => {
         DOMElement.innerHTML += `
-            <li class="userlist-li"> 
+            <li class="userlist-li">
                 <div>${user.username}</div>
                 <input type="checkbox" class="userlist-checkbox userlist-create-checkbox" value=${user.id}>
             </li>
@@ -362,8 +362,8 @@ function renderMemberList(groupInfo,memberListContainer){
     members.forEach(member => {
         const adminBtnsDOM = `
                 ${member.isAdmin?
-                    `<button class="adminBtns admin-toggle-buttons" onclick="removeGroupAdmin(${group.id}, ${member.user.id})"><img class="admin-button-image" src="../public/image/remove-admin.png" alt="remove-admin"></button>`:
-                    `<button class="adminBtns admin-toggle-buttons" onclick="addGroupAdmin(${group.id}, ${member.user.id})"><img class="admin-button-image" src="../public/image/add-admin.png" alt="add-admin"></button>`
+                    `<button class="adminBtns admin-toggle-buttons" onclick="updateAdminStatus(${group.id}, ${member.user.id},'remove')"><img class="admin-button-image" src="../public/image/remove-admin.png" alt="remove-admin"></button>`:
+                    `<button class="adminBtns admin-toggle-buttons" onclick="updateAdminStatus(${group.id}, ${member.user.id},'add')"><img class="admin-button-image" src="../public/image/add-admin.png" alt="add-admin"></button>`
                 }
                 <button class="adminBtns" onclick="removeUser(${group.id}, ${member.user.id})">Remove</button>
         `;
@@ -399,7 +399,7 @@ function renderMessage(username, msg, mssgType, isFile){
 //++++++++++++++++++    API    ++++++++++++++++++++++++++
 async function getUserInfoAPI(cb){
     try{
-        const response = await axios.get(`${BACKEND_ADDRESS}/user/get-info`, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.get(`${BACKEND_ADDRESS}/users/self`, {headers: {'Authorization': localStorage.getItem('token')}});
         cb(response);
     }
     catch(err){
@@ -415,7 +415,7 @@ async function getUserInfoAPI(cb){
 
 async function getUserGroupsAPI(cb){
     try{    
-        const response = await axios.get(`${BACKEND_ADDRESS}/user/groups`, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.get(`${BACKEND_ADDRESS}/users/self/groups`, {headers: {'Authorization': localStorage.getItem('token')}});
         cb(response)
     }
     catch(err){
@@ -431,7 +431,7 @@ async function getUserGroupsAPI(cb){
 
 async function getUserGroupChatsAPI(cb){
     try{    
-        const response = await axios.get(`${BACKEND_ADDRESS}/chat/get-chats`, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.get(`${BACKEND_ADDRESS}/groups/messages`, {headers: {'Authorization': localStorage.getItem('token')}});
         cb(response)
     }
     catch(err){
@@ -447,7 +447,7 @@ async function getUserGroupChatsAPI(cb){
 
 async function fetchAllUsersAPI(){
     try{
-        const response = await axios.get(`${BACKEND_ADDRESS}/user/get-users`, {headers: {"Authorization": localStorage.getItem("token")}});
+        const response = await axios.get(`${BACKEND_ADDRESS}/users/`, {headers: {"Authorization": localStorage.getItem("token")}});
         return response;
     }
     catch{
@@ -469,7 +469,7 @@ async function createGroupAPI(groupName, groupDescription, selectedUserList){
             members: selectedUserList
         };
         
-        const response = await axios.post(`${BACKEND_ADDRESS}/group/create-group/`, grpObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.post(`${BACKEND_ADDRESS}/groups/`, grpObj, {headers: {'Authorization': localStorage.getItem('token')}});
         return response;
     }
     catch(err){
@@ -485,7 +485,7 @@ async function createGroupAPI(groupName, groupDescription, selectedUserList){
 
 async function getGroupInfoAPI(groupId){
     try{
-        const response = await axios.get(`${BACKEND_ADDRESS}/group/get-info?groupId=${groupId}`, {headers: {"Authorization": localStorage.getItem("token")}});
+        const response = await axios.get(`${BACKEND_ADDRESS}/groups/${groupId}`, {headers: {"Authorization": localStorage.getItem("token")}});
         return response;
     }
     catch(err){
@@ -504,9 +504,8 @@ async function updateGroupAPI(groupName, groupDescription){
         const reqObj = {
             groupName: groupName,
             groupDescription: groupDescription,
-            groupId: SELECTED_GROUP
         };
-        const response = await axios.put(`${BACKEND_ADDRESS}/group/update-group`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.put(`${BACKEND_ADDRESS}/groups/${SELECTED_GROUP}`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         return response;
     }
     catch(err){
@@ -520,36 +519,14 @@ async function updateGroupAPI(groupName, groupDescription){
     }
 }
 
-async function addGroupAdmin(groupId, memberId){
+async function updateAdminStatus(groupId, memberId, action){
     try{
         const reqObj ={
-            groupId: groupId,
-            memberId: memberId
+            adminAction: action
         };
-        const response = await axios.put(`${BACKEND_ADDRESS}/group/add-admin`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.put(`${BACKEND_ADDRESS}/groups/${groupId}/admins/${memberId}`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         alert(response.data.message);
         renderEditGroupPage(groupId);
-    }
-    catch(err){
-        if(err.response){
-            if(err.response.status === 401)
-                return authErrorHandling(err);
-            return alert(err.response.data.message);
-        }
-        console.log(err);
-        return Promise.reject(err);
-    }
-}
-
-async function removeGroupAdmin(groupId, memberId){
-    try{
-        const reqObj ={
-            groupId: groupId,
-            memberId: memberId
-        };
-        const response = await axios.put(`${BACKEND_ADDRESS}/group/remove-admin`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
-        renderEditGroupPage(groupId);
-        alert(response.data.message);
     }
     catch(err){
         if(err.response){
@@ -564,7 +541,7 @@ async function removeGroupAdmin(groupId, memberId){
 
 async function removeUser(groupId, memberId){
     try{
-        const response = await axios.delete(`${BACKEND_ADDRESS}/group/remove-user?memberId=${memberId}&groupId=${groupId}`, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.delete(`${BACKEND_ADDRESS}/groups/${groupId}/members/${memberId}`, {headers: {'Authorization': localStorage.getItem('token')}});
         renderEditGroupPage(groupId);
         alert(response.data.message);
     }
@@ -582,10 +559,9 @@ async function removeUser(groupId, memberId){
 async function addUsersAPI(selectedUsers){
     try{      
         const reqObj = {
-            groupId: SELECTED_GROUP,
             members: selectedUsers
         };
-        const response = await axios.post(`${BACKEND_ADDRESS}/group/add-users/`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
+        const response = await axios.post(`${BACKEND_ADDRESS}/groups/${SELECTED_GROUP}/members/`, reqObj, {headers: {'Authorization': localStorage.getItem('token')}});
         return alert(response.data.message);
     }
     catch(err){
@@ -608,7 +584,7 @@ async function sendNewMessage(groupID){
         }
         const currentDate = new Date();
         if(message!==null && message!==undefined && message!==""){
-            const response = await axios.post(`${BACKEND_ADDRESS}/chat/send-message`, {message: message, groupId: groupID}, {headers: {"Authorization": localStorage.getItem("token")}});
+            const response = await axios.post(`${BACKEND_ADDRESS}/groups/${groupID}/messages/text`, {message: message}, {headers: {"Authorization": localStorage.getItem("token")}});
             
             const msgObj = {
                 message: message,
@@ -628,7 +604,7 @@ async function sendNewMessage(groupID){
             formData.append('file', file);
             formData.append('groupId',groupID);
             alert('message will be sent once the file upload completes');
-            const response = await axios.post(`${BACKEND_ADDRESS}/chat/send-file`,formData, {headers: {"Authorization": localStorage.getItem("token")}});
+            const response = await axios.post(`${BACKEND_ADDRESS}/groups/${groupID}/messages/file`,formData, {headers: {"Authorization": localStorage.getItem("token")}});
             const fileObj = {
                 message: response.data.imageurl,
                 createdAt: `${currentDate.getHours()}:${currentDate.getMinutes()}`,
