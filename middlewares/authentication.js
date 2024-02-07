@@ -17,7 +17,7 @@ module.exports.authenticate = async(req, res, next) => {
             next();
         }
         else
-            return res.status(404).json({message: "user not verified"});
+            return res.status(401).json({error: "User not verified", message: "User not verified. \nPlease sign-in again"});
 
     }
     catch(err){
