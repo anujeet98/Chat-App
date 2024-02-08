@@ -265,9 +265,8 @@ module.exports.postFileMessage = async(req, res, next)=>{
         if(!userGroupCheck){
             return res.status(403).json({message: 'user not part of the requested group'});
         }
-
         const filename = `chatfile_${user.id}_${groupId}_${new Date()}_${file.originalname}`;
-        const fileUrl = await AwsS3Service.uploadToS3(filename, file.buffer);
+        const fileUrl = await AwsS3Service.uploadToS3(filename, file.buffer, file.mimetype);
 
 
         const response = await user.createChat({message: fileUrl, groupId: groupId, isFile: true, createdAt: new Date()});

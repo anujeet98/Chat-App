@@ -403,7 +403,7 @@ function renderMessage(username, msg, mssgType, isFile, createdAt){
             <div class="conversation-item-text">
                 <div class="conversation-item-name">${username}</div>
                 ${isFile===true?
-                    `<a href="${msg}" class="conversation-item-file" title="${msg}"><img src="${msg}" alt="download file" onerror="fileDefaultImage(event)"/></a>`:
+                    `<a href="${msg}" target="_blank" class="conversation-item-file" title="${msg}"><img src="${msg}" alt="download file" onerror="fileDefaultImage(event)"/></a>`:
                     `<p>${msg}</p>`
                 }
                 <div class="conversation-item-time">${createdAt}</div>
