@@ -26,10 +26,10 @@ module.exports = {
                 // console.log(`${socket.id} joined GroupId :: `,group);
             });
         })
-        socket.on("new-message", (groupId, message) => {
-            io.to(groupId).emit("new-message", message);
+        // socket.on("new-message", (groupId, message) => {
+        //     io.to(groupId).emit("new-message", message);
             // console.log(`+++++++++ message received from ${socket.id} to ${groupId} +++++++++`,message);
-        });
+        // });
         
         //   socket.on("disconnect", (reason) => {
         //     console.log(`socket ${socket.id} disconnected due to ${reason}`);

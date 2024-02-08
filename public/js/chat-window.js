@@ -17,7 +17,7 @@ const attachBtn = document.getElementById('attachBtn');
 let EMOJI_PICK_VIEW = false; 
 let SELECTED_GROUP=-1;
 let USER={};
-const BACKEND_ADDRESS = 'http://localhost:4000';
+const BACKEND_ADDRESS = 'http://54.198.2.94:80';
 
 const api = axios.create({
     baseURL: `http://${BACKEND_ADDRESS}`,
