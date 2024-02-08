@@ -265,7 +265,8 @@ module.exports.postFileMessage = async(req, res, next)=>{
         if(!userGroupCheck){
             return res.status(403).json({message: 'user not part of the requested group'});
         }
-        const filename = `chatfile_${user.id}_${groupId}_${new Date()}_${file.originalname}`;
+        //filename shrotened to 20char or less from the end
+        const filename = `chatfile_${user.id}_${groupId}_${new Date().toString()}_${file.originalname.length>20?file.originalname.substring(file.originalname.length-20):file.originalname}`;
         const fileUrl = await AwsS3Service.uploadToS3(filename, file.buffer, file.mimetype);
 
 

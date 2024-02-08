@@ -570,3 +570,32 @@ body {
 .dropdown-toggle::after {
     display: none;
   }
+
+  .no-preview{
+    max-width: 200px;
+    max-height: 180px;
+    height: 200px;
+    width: 200px;
+    border: 1px rgba(128, 128, 128, 0.785);
+    border-radius: 8px;
+    background-color: rgba(216, 225, 216, 0.514);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .no-preview-btn{
+    border-radius: 20px;
+    width: 100px;
+    height: 40px;
+    background-color: rgba(128, 128, 128, 0.126);
+    border: 0.2px grey;
+    color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+  }
+  .no-preview-btn:hover{
+    background-color: rgba(128, 128, 128, 0.345);
+  }
