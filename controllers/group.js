@@ -10,7 +10,7 @@ const AwsS3Service = require('../services/aws-s3-service');
 
 const inputValidator = require('../util/input-validator');
 
-
+const socketService = require('../services/socket').socketServer;
 
 module.exports.createGroup = async(req,res,next) => {
     let tran;
@@ -222,7 +222,7 @@ module.exports.updateGroup = async(req,res,next) => {
 module.exports.postTextMessage = async(req, res, next)=>{
     try{
         const message = req.body.message;
-        const groupId = req.params.groupId;
+        const groupId = +req.params.groupId;
         const user = req.user;
         if(inputValidator.text(message) || inputValidator.number(groupId))
             return res.status(422).json({error: "bad input parameters", message: "invalid input provided"});
@@ -231,12 +231,23 @@ module.exports.postTextMessage = async(req, res, next)=>{
         if(!userGroupCheck){
             return res.status(403).json({message: 'user not part of the requested group'});
         }
+        const response = await user.createChat({message: message, groupId: groupId, isFile: false, createdAt: new Date()});
 
-        const response = await user.createChat({message: message, groupId: groupId, isFile: false});
+        const msgObj = {
+            message: response.dataValues.message,
+            createdAt: response.createdAt.toString().substring(4,21),
+            userId: response.dataValues.userId,
+            groupId: groupId,
+            username: req.user.username,
+            isFile: response.dataValues.isFile
+        }
+
+        socketService(groupId, msgObj);
+
         return res.status(201).json({message: "message sent success"});
     }
     catch(err){
-        console.error("PostChat-Error: ",err);
+        console.error("PostChat-Text-Error: ",err);
         return res.status(500).json({error: err, message:"something went wrong"});
     }
 }
@@ -245,7 +256,7 @@ module.exports.postTextMessage = async(req, res, next)=>{
 module.exports.postFileMessage = async(req, res, next)=>{
     try{
         const {file, user} = req;
-        const groupId = req.params.groupId;
+        const groupId = +req.params.groupId;
 
         if(inputValidator.file(file) || inputValidator.number(groupId))
             return res.status(422).json({error: "bad input parameters", message: "invalid input provided. File upload max limit is 5MB"});
@@ -260,10 +271,21 @@ module.exports.postFileMessage = async(req, res, next)=>{
 
 
         const response = await user.createChat({message: fileUrl, groupId: groupId, isFile: true});
-        return res.status(201).json({imageurl: fileUrl, message: "message sent success"});
+
+        const msgObj = {
+            message: response.dataValues.imageurl,
+            createdAt: response.createdAt.toString().substring(4,21),
+            userId: response.dataValues.userId,
+            groupId: groupId,
+            username: req.user.username,
+            isFile: response.dataValues.isFile
+        }
+        socketService(groupId, msgObj);
+
+        return res.status(201).json({message: "message sent success"});
     }
     catch(err){
-        console.error("PostChat-Error: ",err);
+        console.error("PostChat-File-Error: ",err);
         return res.status(500).json({error: err, message:"something went wrong"});
     }
 }
@@ -272,7 +294,7 @@ module.exports.getGroupMessages = async(req, res, next) => {
     try{
         const user = req.user;
         const groups = await user.getGroups({attributes: ['id']});
-        const chats = await ChatModel.findAll({
+        let chats = await ChatModel.findAll({
             attributes: ['message','createdAt', 'userId','groupId',[literal('(SELECT `username` FROM `users` WHERE `users`.`id` = `chat`.`userId`)'), 'username'], 'isFile'],
             where: {
                 groupId: {
@@ -280,6 +302,14 @@ module.exports.getGroupMessages = async(req, res, next) => {
                 }
             },
             order: [['groupId','ASC'],['createdAt', 'ASC']]
+        });
+
+        //Date Formating
+        chats = chats.map(chat => {
+            return {
+                ...chat.dataValues,
+                createdAt: chat.createdAt.toString().substring(4, 21)
+            };
         });
         res.status(200).json({groupChats: chats});
     }

@@ -6,10 +6,9 @@ const path = require('path');
 const fs = require('fs');
 const morgan = require('morgan');
 const http = require('http');
-const socket = require('socket.io');
-const { instrument } = require('@socket.io/admin-ui');
 
-const socketService = require('./services/socket');
+const sentryConfig = require('./configuration/sentry');
+const socketServerConfig = require('./services/socket').socketServerConfig;
 const cronService = require('./services/archive-cron');
 cronService.start();
 
@@ -23,18 +22,19 @@ const Group = require('./models/group');
 const UserGroup = require('./models/user-group');
 const ForgetPassword = require('./models/forget-password');
 
-const sentryConfig = require('./configuration/sentry');
 
 //-----------------------------------------------------------------------------------------
 const accessLogStream = fs.createWriteStream(
     path.join(__dirname, 'access.log'), 
-    {flags: 'a'});
+    {flags: 'a'}
+);
 
 const app = express();
 const server = http.createServer(app);
+socketServerConfig(server);                   //SOCKET SERVER CONFIG
 
-const Sentry = sentryConfig(server);
-app.use(Sentry.Handlers.requestHandler());  //sentry logging
+const Sentry = sentryConfig(server);          //SENTRY CONFIG
+app.use(Sentry.Handlers.requestHandler());  
 
 
 // app.use(helmet()); 
@@ -50,7 +50,6 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/users', userRoutes);
 app.use('/groups', groupRoutes);
 app.use('/password', passwordRoutes);
-  
 app.use((req,res) => {
     // console.log(__dirname, req.url);
     const fileExists = fs.existsSync(path.join(__dirname, `/views/${req.url}`));
@@ -66,15 +65,6 @@ app.use((req,res) => {
 // -----------------------------------SENTRY----------------------------------------------------
 
 app.use(Sentry.Handlers.errorHandler());    //sentry error handler
-
-//------------------------------------SOCKET------------------------------------------------------
-const io = socket(server,{
-    cors: {
-        origin: JSON.parse(`${process.env.ACCEPTED_ORIGINS}`)
-    }
-});
-io.on("connection", socket => socketService(io,socket));
-instrument(io, { auth: false });
 
 // -----------------------------------MODEL ASSOSCIATIONS-----------------------------------------------------
 
