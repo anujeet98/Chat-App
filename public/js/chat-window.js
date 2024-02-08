@@ -403,7 +403,7 @@ function renderMessage(username, msg, mssgType, isFile, createdAt){
             <div class="conversation-item-text">
                 <div class="conversation-item-name">${username}</div>
                 ${isFile===true?
-                    `<a href="${msg}" class="conversation-item-file" title="${msg}"><img src="${msg}" alt="download file" onerror="fileDefaultImage(event)"/></a>`:
+                    `<a href="${msg}" target="_blank" class="conversation-item-file" title="${msg}"><img src="${msg}" alt="download file" onerror="fileDefaultImage(event)"/></a>`:
                     `<p>${msg}</p>`
                 }
                 <div class="conversation-item-time">${createdAt}</div>
@@ -628,6 +628,13 @@ async function sendNewMessage(groupID){
 
 //download file alternate image load
 function fileDefaultImage(event) {
-  event.target.src = `${BACKEND_ADDRESS}/public/image/download.png`
+//   event.target.src = `${BACKEND_ADDRESS}/public/image/download.png`
+  const href = event.target.src;
+  const parentContainer = event.target.parentNode;
+  event.target.remove();
+  const newElement = document.createElement('div');
+  newElement.classList.add(['no-preview']);
+  newElement.innerHTML = `<a href="${href}" target="_blank" class="no-preview-btn">Download</a>`;
+  parentContainer.appendChild(newElement);
   event.onerror = null
 }
