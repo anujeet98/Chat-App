@@ -270,10 +270,10 @@ module.exports.postFileMessage = async(req, res, next)=>{
         const fileUrl = await AwsS3Service.uploadToS3(filename, file.buffer);
 
 
-        const response = await user.createChat({message: fileUrl, groupId: groupId, isFile: true});
+        const response = await user.createChat({message: fileUrl, groupId: groupId, isFile: true, createdAt: new Date()});
 
         const msgObj = {
-            message: response.dataValues.imageurl,
+            message: response.dataValues.message,
             createdAt: response.createdAt.toString().substring(4,21),
             userId: response.dataValues.userId,
             groupId: groupId,
