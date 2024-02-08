@@ -41,9 +41,9 @@ socket.on('new-message', msgObj => {
     storeChatsToLS([msgObj]);
     if(msgObj && SELECTED_GROUP===msgObj.groupId){
         if(msgObj.userId === USER.userId)
-            renderMessage(msgObj.username, msgObj.message, 'myMsg', msgObj.isFile?msgObj.isFile:false);
+            renderMessage(msgObj.username, msgObj.message, 'myMsg', msgObj.isFile?msgObj.isFile:false, msgObj.createdAt);
         else    
-            renderMessage(msgObj.username, msgObj.message, 'otherMsg', msgObj.isFile?msgObj.isFile:false);
+            renderMessage(msgObj.username, msgObj.message, 'otherMsg', msgObj.isFile?msgObj.isFile:false, msgObj.createdAt);
     }
 })
 
@@ -306,9 +306,9 @@ async function loadOldChats(groupId){
         if(savedChats || savedChats!==undefined){
             savedChats.forEach(chat =>{
                 if(+chat.userId === +USER.userId)
-                    renderMessage(chat.username, chat.message, 'myMsg', chat.isFile?chat.isFile:false);
+                    renderMessage(chat.username, chat.message, 'myMsg', chat.isFile?chat.isFile:false, chat.createdAt);
                 else    
-                    renderMessage(chat.username, chat.message, 'otherMsg', chat.isFile?chat.isFile:false);
+                    renderMessage(chat.username, chat.message, 'otherMsg', chat.isFile?chat.isFile:false, chat.createdAt);
             });
         }
     }
@@ -392,7 +392,7 @@ function renderMemberList(groupInfo,memberListContainer){
     });
 }
 
-function renderMessage(username, msg, mssgType, isFile){
+function renderMessage(username, msg, mssgType, isFile, createdAt){
     const messageItem = `<li class="${mssgType==='myMsg'?'conversation-item self':'conversation-item'}">
         <div class="conversation-item-box">
             <div class="conversation-item-text">
@@ -401,7 +401,7 @@ function renderMessage(username, msg, mssgType, isFile){
                     `<a href="${msg}" class="conversation-item-file" title="${msg}"><img src="${msg}" alt="download file" onerror="fileDefaultImage(event)"/></a>`:
                     `<p>${msg}</p>`
                 }
-                <div class="conversation-item-time">12:30</div>
+                <div class="conversation-item-time">${createdAt}</div>
             </div>
         </div>
     </li>`;
@@ -596,38 +596,15 @@ async function sendNewMessage(groupID){
         const currentDate = new Date();
         if(message!==null && message!==undefined && message!==""){
             const response = await api.post(`${BACKEND_ADDRESS}/groups/${groupID}/messages/text`, {message: message}, {headers: {"Authorization": localStorage.getItem("token")}});
-            
-            const msgObj = {
-                message: message,
-                createdAt: `${currentDate.getHours()}:${currentDate.getMinutes()}`,
-                userId: USER.userId,
-                groupId: groupID,
-                username: USER.username,
-                isFile: false
-            }
-            socket.emit('new-message', groupID, msgObj);
         }
         else if (file){
             if(file.size>5242880)
                 return alert('File upload max limit is 5MB');
-            // if(file.type.startsWith('image/')){
             const formData = new FormData();
             formData.append('file', file);
             formData.append('groupId',groupID);
             alert('message will be sent once the file upload completes');
             const response = await api.post(`${BACKEND_ADDRESS}/groups/${groupID}/messages/file`,formData, {headers: {"Authorization": localStorage.getItem("token")}});
-            const fileObj = {
-                message: response.data.imageurl,
-                createdAt: `${currentDate.getHours()}:${currentDate.getMinutes()}`,
-                userId: USER.userId,
-                groupId: groupID,
-                username: USER.username,
-                isFile: true
-            }
-            socket.emit('new-message', groupID, fileObj);
-            // }
-            // else
-            //     alert('Please upload a valid image file.');
         }
     }
     catch(err){
