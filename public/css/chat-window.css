@@ -8,20 +8,6 @@
     font: inherit
 }
 
-html {
-    overflow: hidden;
-    width: 100%;
-  }
-  
-  body {
-    height: 100%;
-    position: fixed;
-    /* prevent overscroll bounce*/
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    /* iOS velocity scrolling */
-  }
-
 body {
     font-family: sans-serif;
     position: relative;
@@ -46,74 +32,6 @@ body {
     position: relative;
 }
 /* chat end */
-
-/* start sidebar */
-/* .chat-sidebar{
-    width: 64px;
-    background-color: rgba(117, 165, 151, 0.2);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-.chat-sidebar-logo{
-    font-size: 35px;
-    color: rgb(13, 194, 142);
-    display: block;
-    text-align: center;
-    padding: 8px;
-    text-decoration: none;
-}
-.chat-sidebar-menu{
-    list-style-type: none;
-}
-.chat-sidebar-menu a {
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    font-size: 28px;
-    padding: 12px 8px;
-    color: rgb(133, 136, 133);
-}
-.chat-sidebar-menu a:hover{
-    color: rgb(56, 55, 55);
-}
-
-.chat-sidebar-menu .active>a{
-    box-shadow: inset 5px 0 0 0 rgb(8, 95, 70);
-    color: rgb(13, 194, 142);
-    background-color: rgba(67, 90, 83, 0.2);
-}
-
-
-
-.chat-sidebar-profile{
-    margin-top: auto;
-    position: relative;
-}
-.chat-sidebar-profile-toggle{
-    border: none;
-    background-color: transparent;    
-    height: 40px;
-    width: 40px;
-    margin: 0 auto;
-    display: block;
-}
-
-.chat-sidebar-profile-toggle>img{
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
-
-.chat-sidebar-profile-dropdown{
-    position: absolute;
-} */
-/* end sidebar */
 
 
 /* start content sidebar */
@@ -181,7 +99,7 @@ body {
 }
 .content-sidebar-search-submit{
     position: absolute;
-    padding: 2% 5%;
+    padding: 5px 10px;
     font-size: 20px;
     cursor: pointer;
 
@@ -463,10 +381,13 @@ body {
 @media screen and (max-width: 1600px){
     .chat-container{
         max-width: unset;
-        height: 100vh;
+        height: 100%;
+        position: fixed;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
     }
 }
-@media screen and (max-width: 720px){
+@media screen and (max-width: 768px){
     .content-conversation
     {
         padding-left: unset;
