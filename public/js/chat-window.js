@@ -79,6 +79,11 @@ document.addEventListener('DOMContentLoaded', async()=>{
     }
 });
 
+function userLogout(){
+    localStorage.removeItem('token');
+    window.location.href = '/home.html';
+}
+
 document.querySelectorAll('.content-group-btn').forEach(elem => {
     elem.addEventListener('click', changeToContentConversationView);
 });
