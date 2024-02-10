@@ -10,7 +10,7 @@ const signupBtn =  document.getElementById("signup");
 const signinBtn = document.getElementById("signin");
 const resetPsswdBtn = document.getElementById('resetpsswd');
 const formWindow = document.getElementById('form');
-const BACKEND_ADDRESS = 'http://54.198.2.94:80';
+const BACKEND_ADDRESS = 'http://www.sociochat.work.gd';
 
 if(signupBtn)
     signupBtn.addEventListener("click", signup);
